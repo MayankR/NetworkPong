@@ -22,6 +22,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener, Mo
 	private URL base;
 	private Graphics second;
 	int anim_time=5;
+	boolean started;
 
 	final int border_top = 0, border_bottom = 480, border_left = 0, border_right = 480;
 
@@ -44,6 +45,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener, Mo
 
 	@Override
 	public void start() {
+		started = false;
 		paddle = new Paddle(80, border_right/2, border_right, 20,-1);
 		comp_paddle = new Paddle(80, border_right/2, border_right, 20, -1);
 		left_paddle = new Paddle(80, border_right/2, border_right, 20, -1);
@@ -52,7 +54,22 @@ public class StartingClass extends Applet implements Runnable, MouseListener, Mo
 		for (int b = 0; b < n_balls; b++)
 			ball[b] = new Ball(paddle.getPos() + (2 * paddle.getSize() * (2 * b - n_balls)) / (5 * n_balls),
 					(int) (border_bottom - paddle.height - radius), radius);
+		gameNotStarted();
 		Thread thread = new Thread(this);
+		thread.start();
+	}
+
+	private void gameNotStarted() {
+		Thread thread = new Thread(){ 
+			   public void run () {
+				   while(!started)
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+			   }
+			 }; 
 		thread.start();
 	}
 
@@ -81,7 +98,9 @@ public class StartingClass extends Applet implements Runnable, MouseListener, Mo
 		second.setColor(getBackground());
 		second.fillRect(0, 0, getWidth(), getHeight());
 		second.setColor(getForeground());
-		paint(second);
+		
+		if(started)
+			paint(second);
 
 		g.drawImage(image, 0, 0, this);
 
@@ -249,6 +268,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener, Mo
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
 		// TODO Auto-generated method stub
+		started = true;
 
 	}
 
