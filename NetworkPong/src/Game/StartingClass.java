@@ -41,6 +41,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener, Mo
 		}
 		Ball = getImage(base, "Data/Ball.png");
 		Paddle = getImage(base, "Data/Paddle.png");
+		System.out.println("FRRRRRR "+base +" "+Ball);
 	}
 
 	@Override
@@ -60,7 +61,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener, Mo
 	}
 
 	private void gameNotStarted() {
-		Thread thread = new Thread(){ 
+		Thread thread = new Thread(){
 			   public void run () {
 				   while(!started)
 					try {
@@ -101,6 +102,8 @@ public class StartingClass extends Applet implements Runnable, MouseListener, Mo
 		
 		if(started)
 			paint(second);
+		else 
+			new OpeningScreen(Ball).paint(second);
 
 		g.drawImage(image, 0, 0, this);
 
