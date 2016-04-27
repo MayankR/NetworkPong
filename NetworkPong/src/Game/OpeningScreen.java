@@ -24,7 +24,7 @@ public class OpeningScreen extends Applet {
 		} catch (Exception e) {
 		}
 		Toolkit t=Toolkit.getDefaultToolkit();  
-        ball=t.getImage("/Local Disk E/Applets/NetworkPong/NetworkPong/src/Data/Ball.png");
+        ball=t.getImage("/Data/Ball.png");
 //		ball = getImage(base, "Data/Ball.png");
         b1=i1;
 		System.out.println("#@#!@!#!@#!@#!#1   "+ball+"   "+i1);
@@ -32,7 +32,8 @@ public class OpeningScreen extends Applet {
 			
 	public void paint(Graphics g) {
 		System.out.println("#@#!@!#!@#!@#!#1   "+ball+"   "+b1);
-		g.drawImage(b1, 0, 0, 100, 100, this);
+		g.drawImage(ball, 0, 0, 100, 100, this);
+		g.drawImage(b1, 100, 100, 100, 100, this);
 		g.setColor(Color.BLUE);
 //		g.fillRect(0, 0, 400, 400);
 	}
