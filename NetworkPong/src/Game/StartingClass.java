@@ -2,6 +2,7 @@ package Game;
 
 import java.applet.Applet;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -16,36 +17,46 @@ import java.net.URL;
 public class StartingClass extends Applet implements Runnable, MouseListener,
 		MouseMotionListener, KeyListener {
 
-	Paddle paddle, comp_paddle, left_paddle, right_paddle;
-	int n_balls = 1;
-	Ball ball[] = new Ball[n_balls];
-	private Image Ball, Paddle, image;
-	private URL base;
-	private Graphics second;
-	int anim_time = 5;
-	boolean started, clicked_ip_box,player2,player3,player4,to_start,create_not_join;
+	Paddle paddle, comp_paddle, left_paddle, right_paddle;				//the four paddles in the game
+	int n_balls = 1;													// number of balls in the game
+	public int init_life=10;												// number of lives for each player in the beginning
+	Ball ball[] = new Ball[n_balls];									//ball objects for the n balls
+	private Image Ball, Paddle, image, Life;									//ball -> ball image; paddle -> paddle image; image TODO (donno)
+	private URL base;													
+	private Graphics second;											
+	int paddle_life, comp_life, left_life, right_life;					// paddle lives for the four paddles
+	int anim_time = 5;													// anim_time -> time to 
+	boolean level_select,started, clicked_ip_box, player2, player3, player4, to_start,	//started => main game started; clicked_ip_box => ipbox clicked; playerx -> human;
+			create_not_join;												// to_start ->    create_not_join -> game created
 	String ip_text = "Your IP Goes Here";
 	final int barrier_height = 50;
 
+	int level=1;
+	
 	final int border_top = 0, border_bottom = 480, border_left = 0,
 			border_right = 480;
 
 	@Override
 	public void init() {
+		paddle_life=init_life;
+		comp_life=init_life;
+		left_life=init_life;
+		right_life=init_life;
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		addKeyListener(this);
-		setSize(border_right, border_bottom);
+		setSize(border_right + 200, border_bottom);
 		setBackground(Color.BLACK);
 		setFocusable(true);
 		Frame frame = (Frame) this.getParent().getParent();
-		frame.setTitle("Juggler");
+		frame.setTitle("Network Pong");
 		try {
 			base = getDocumentBase();
 		} catch (Exception e) {
 		}
 		Ball = getImage(base, "Data/Ball.png");
 		Paddle = getImage(base, "Data/Paddle.png");
+		Life = getImage(base, "Data/Life.png");
 	}
 
 	@Override
@@ -96,16 +107,21 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 			g.drawImage(Ball, (int) ball[i].getX() - ball[i].getSize(),
 					(int) ball[i].getY() - ball[i].getSize(),
 					2 * ball[i].getSize(), 2 * ball[i].getSize(), this);
-		g.drawImage(Paddle, paddle.getPos() - paddle.getSize() / 2,
-				border_bottom - paddle.height, paddle.getSize(), paddle.height,
-				this);
+		
+		if(paddle_life>0)
+			g.drawImage(Paddle, paddle.getPos() - paddle.getSize() / 2,
+					border_bottom - paddle.height, paddle.getSize(), paddle.height,
+					this);
+		if(comp_life>0)
 		g.drawImage(
 				Paddle,
 				border_right - comp_paddle.getPos() - comp_paddle.getSize() / 2,
 				border_top, comp_paddle.getSize(), comp_paddle.height, this);
+		if(left_life>0)
 		g.drawImage(Paddle, border_left,
 				left_paddle.getPos() - left_paddle.getSize() / 2,
 				left_paddle.height, left_paddle.getSize(), this);
+		if(right_life>0)
 		g.drawImage(Paddle, border_right - right_paddle.height, border_bottom
 				- right_paddle.getPos() - right_paddle.getSize() / 2,
 				right_paddle.height, right_paddle.getSize(), this);
@@ -118,6 +134,61 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 				barrier_height, barrier_height, this);
 		g.drawImage(Paddle, border_right - barrier_height, border_bottom
 				- barrier_height, barrier_height, barrier_height, this);
+		g.setColor(Color.WHITE);
+		g.setFont(new Font("TimesRoman", Font.BOLD, 20));
+		g.drawString(paddle_life+"\n"+comp_life+"\n"+left_life+"\n"+right_life, 500, 100);
+		switch(paddle_life)
+		{
+			case 10	:	g.drawImage(Life,border_right+5,border_top+40,15,15,this);
+			case 9	:	g.drawImage(Life,border_right+25,border_top+40,15,15,this);
+			case 8	:	g.drawImage(Life,border_right+45,border_top+40,15,15,this);
+			case 7	:	g.drawImage(Life,border_right+65,border_top+40,15,15,this);
+			case 6	:	g.drawImage(Life,border_right+85,border_top+40,15,15,this);
+			case 5	:	g.drawImage(Life,border_right+105,border_top+40,15,15,this);
+			case 4	:	g.drawImage(Life,border_right+125,border_top+40,15,15,this);
+			case 3	:	g.drawImage(Life,border_right+145,border_top+40,15,15,this);
+			case 2	:	g.drawImage(Life,border_right+165,border_top+40,15,15,this);
+			case 1	:	g.drawImage(Life,border_right+185,border_top+40,15,15,this);
+		}
+		switch(left_life)
+		{
+			case 10	:	g.drawImage(Life,border_right+5,border_top+80,15,15,this);
+			case 9	:	g.drawImage(Life,border_right+25,border_top+80,15,15,this);
+			case 8	:	g.drawImage(Life,border_right+45,border_top+80,15,15,this);
+			case 7	:	g.drawImage(Life,border_right+65,border_top+80,15,15,this);
+			case 6	:	g.drawImage(Life,border_right+85,border_top+80,15,15,this);
+			case 5	:	g.drawImage(Life,border_right+105,border_top+80,15,15,this);
+			case 4	:	g.drawImage(Life,border_right+125,border_top+80,15,15,this);
+			case 3	:	g.drawImage(Life,border_right+145,border_top+80,15,15,this);
+			case 2	:	g.drawImage(Life,border_right+165,border_top+80,15,15,this);
+			case 1	:	g.drawImage(Life,border_right+185,border_top+80,15,15,this);
+		}
+		switch(comp_life)
+		{
+			case 10	:	g.drawImage(Life,border_right+5,border_top+120,15,15,this);
+			case 9	:	g.drawImage(Life,border_right+25,border_top+120,15,15,this);
+			case 8	:	g.drawImage(Life,border_right+45,border_top+120,15,15,this);
+			case 7	:	g.drawImage(Life,border_right+65,border_top+120,15,15,this);
+			case 6	:	g.drawImage(Life,border_right+85,border_top+120,15,15,this);
+			case 5	:	g.drawImage(Life,border_right+105,border_top+120,15,15,this);
+			case 4	:	g.drawImage(Life,border_right+125,border_top+120,15,15,this);
+			case 3	:	g.drawImage(Life,border_right+145,border_top+120,15,15,this);
+			case 2	:	g.drawImage(Life,border_right+165,border_top+120,15,15,this);
+			case 1	:	g.drawImage(Life,border_right+185,border_top+120,15,15,this);
+		}
+		switch(right_life)
+		{
+			case 10	:	g.drawImage(Life,border_right+5,border_top+160,15,15,this);
+			case 9	:	g.drawImage(Life,border_right+25,border_top+160,15,15,this);
+			case 8	:	g.drawImage(Life,border_right+45,border_top+160,15,15,this);
+			case 7	:	g.drawImage(Life,border_right+65,border_top+160,15,15,this);
+			case 6	:	g.drawImage(Life,border_right+85,border_top+160,15,15,this);
+			case 5	:	g.drawImage(Life,border_right+105,border_top+160,15,15,this);
+			case 4	:	g.drawImage(Life,border_right+125,border_top+160,15,15,this);
+			case 3	:	g.drawImage(Life,border_right+145,border_top+160,15,15,this);
+			case 2	:	g.drawImage(Life,border_right+165,border_top+160,15,15,this);
+			case 1	:	g.drawImage(Life,border_right+185,border_top+160,15,15,this);
+		}
 	}
 
 	@Override
@@ -132,10 +203,26 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 		second.setColor(getForeground());
 
 		if (started)
+		{
 			paint(second);
-		else if(to_start && create_not_join)
-			new OpeningScreen(Paddle, ip_text,player2,player3,player4).paint(second);
-		else if(to_start && !create_not_join)
+			Image arr[]={Paddle};
+			System.out.println("FfefwefPPPP" + level);
+			switch(level)
+			{
+				case 0	:	new Level0().display(second,arr);
+						break;
+				case 1	:	new Level1().display(second,arr);
+						break;
+				case 2	:	new Level2().display(second,arr);
+						break;
+			}
+		}
+		else if (to_start && create_not_join && level_select)
+			new ChooseLevel(Paddle).paint(second);
+		else if (to_start && create_not_join)
+			new OpeningScreen(Paddle, ip_text, player2, player3, player4)
+					.paint(second);
+		else if (to_start && !create_not_join)
 			new JoinGame(Paddle, ip_text).paint(second);
 		else
 			new Choose_Game_Type(Paddle).paint(second);
@@ -233,6 +320,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 				if (x - radius <= border_left) {
 					ball[b].setSpeedX(Math.abs(ball[b].getSpeedX()));
 					ball[b].setX(border_left + radius);
+					left_life--;
 				}
 				if ((border_top + barrier_height >= y - radius || border_bottom
 						- barrier_height <= y + radius)
@@ -245,6 +333,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 				if (x + radius >= border_right) {
 					ball[b].setSpeedX(-Math.abs(ball[b].getSpeedX()));
 					ball[b].setX(border_right - radius);
+					right_life--;
 				}
 				if ((border_top + barrier_height >= y - radius || border_bottom
 						- barrier_height <= y + radius)
@@ -257,6 +346,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 				if (y - radius <= border_top) {
 					ball[b].setSpeedY(Math.abs(ball[b].getSpeedY()));
 					ball[b].setY(border_top + radius);
+					comp_life--;
 				}
 				if ((x - radius <= border_left + barrier_height || x + radius >= border_right
 						- barrier_height)
@@ -269,6 +359,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 				if (y + radius >= border_bottom) {
 					ball[b].setSpeedY(-Math.abs(ball[b].getSpeedY()));
 					ball[b].setY(border_bottom - radius);
+					paddle_life--;
 				}
 				if ((x - radius < border_left + barrier_height || x + radius > border_right
 						- barrier_height)
@@ -282,6 +373,16 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 				ball[b].update();
 				// System.out.println(b + " " + ball[b].getX() + " " +
 				// ball[b].getY());
+				System.out.println("Ffefwef" + level);
+				switch(level)
+				{
+					case 0	:	new Level0().reflect(ball[b]);
+							break;
+					case 1	:	new Level1().reflect(ball[b]);
+							break;
+					case 2	:	new Level2().reflect(ball[b]);
+							break;
+				}
 			}
 			if (ball[0].getX() != border_right - comp_paddle.getPos())
 				comp_paddle
@@ -321,39 +422,65 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		if (to_start && !started && arg0.getX() > 80 && arg0.getX() < 340
+		if (to_start && !level_select && !started && arg0.getX() > 80 && arg0.getX() < 340
 				&& arg0.getY() > 100 && arg0.getY() < 130) {
 			clicked_ip_box = true;
 			ip_text = "";
-		}
-		else if (to_start && create_not_join && !started && arg0.getX() > 80 && arg0.getX() < 400
-				&& arg0.getY() > 140 && arg0.getY() < 170) {
-			player2=!player2;
-		}
-		else if (to_start && create_not_join && !started && arg0.getX() > 80 && arg0.getX() < 400
-				&& arg0.getY() > 180 && arg0.getY() < 210) {
-			player3=!player3;
-		}
-		else if (to_start && create_not_join && !started && arg0.getX() > 80 && arg0.getX() < 400
-				&& arg0.getY() > 220 && arg0.getY() < 250) {
-			player4=!player4;
-		}
-		else if(to_start && !started && !(arg0.getX() > 80 && arg0.getX() < 400
-				&& arg0.getY() > 80 && arg0.getY() < 280)) {
+		} else if (to_start && create_not_join && !level_select && !started && arg0.getX() > 80
+				&& arg0.getX() < 400 && arg0.getY() > 140 && arg0.getY() < 170) {
+			player2 = !player2;
+		} else if (to_start && create_not_join && !level_select && !started && arg0.getX() > 80
+				&& arg0.getX() < 400 && arg0.getY() > 180 && arg0.getY() < 210) {
+			player3 = !player3;
+		} else if (to_start && create_not_join && !level_select && !started && arg0.getX() > 80
+				&& arg0.getX() < 400 && arg0.getY() > 220 && arg0.getY() < 250) {
+			player4 = !player4;
+		} else if (to_start && create_not_join && level_select
+				&& !started
+				&& (arg0.getX() > 100 && arg0.getX() < 340 && arg0.getY() > 60 && arg0
+						.getY() < 90)) {
+			level = 0;
+			System.out.println("FWEEFWEFWWEWEFWFWEFWE  "+level);
 			started = true;
 			clicked_ip_box = false;
-		}
-		else if(!to_start && (arg0.getX() > 100 && arg0.getX() < 340
-				&& arg0.getY() > 100 && arg0.getY() < 130))
-		{
-			to_start=true;
-			create_not_join=true;
-		}
-		else if(!to_start && (arg0.getX() > 100 && arg0.getX() < 340
-				&& arg0.getY() > 140 && arg0.getY() < 170))
-		{
-			to_start=true;
-			create_not_join=false;
+		} else if (to_start && create_not_join && level_select
+				&& !started
+				&& (arg0.getX() > 100 && arg0.getX() < 340 && arg0.getY() > 100 && arg0
+						.getY() < 130)) {
+			System.out.println("FWEEFWEFWWEWEFWFWEFWE  "+level);
+			level = 1;
+			started = true;
+			clicked_ip_box = false;
+		} else if (to_start && create_not_join && level_select
+				&& !started
+				&& (arg0.getX() > 100 && arg0.getX() < 340 && arg0.getY() > 140 && arg0
+						.getY() < 170)) {
+			System.out.println("FWEEFWEFWWEWEFWFWEFWE  "+level);
+			level = 2;
+			started = true;
+			clicked_ip_box = false;
+		} else if (to_start && create_not_join && !level_select
+				&& !started
+				&& !(arg0.getX() > 80 && arg0.getX() < 400 && arg0.getY() > 80 && arg0
+						.getY() < 280)) {
+			level_select = true;
+			clicked_ip_box = false;
+		} else if (to_start && !create_not_join
+				&& !started
+				&& !(arg0.getX() > 80 && arg0.getX() < 400 && arg0.getY() > 80 && arg0
+						.getY() < 280)) {
+			started = true;
+			clicked_ip_box = false;
+		} else if (!to_start
+				&& (arg0.getX() > 100 && arg0.getX() < 340 && arg0.getY() > 100 && arg0
+						.getY() < 130)) {
+			to_start = true;
+			create_not_join = true;
+		} else if (!to_start
+				&& (arg0.getX() > 100 && arg0.getX() < 340 && arg0.getY() > 140 && arg0
+						.getY() < 170)) {
+			to_start = true;
+			create_not_join = false;
 		}
 
 	}
@@ -424,10 +551,10 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 						ip_text.length() - 1);
 				break;
 			default:
-				ip_text = ip_text.length()==15?ip_text:ip_text + arg0.getKeyChar();
+				ip_text = ip_text.length() == 15 ? ip_text : ip_text
+						+ arg0.getKeyChar();
 			}
-		}
-		else if (arg0.getKeyCode() == KeyEvent.VK_LEFT) {
+		} else if (arg0.getKeyCode() == KeyEvent.VK_LEFT) {
 			paddle.setPos(paddle.getPos() - 10);
 		} else if (arg0.getKeyCode() == KeyEvent.VK_RIGHT) {
 			paddle.setPos(paddle.getPos() + 10);
