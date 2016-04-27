@@ -23,7 +23,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 	private URL base;
 	private Graphics second;
 	int anim_time = 5;
-	boolean started, clicked_ip_box,player2,player3,player4;
+	boolean started, clicked_ip_box,player2,player3,player4,to_start,create_not_join;
 	String ip_text = "Your IP Goes Here";
 	final int barrier_height = 50;
 
@@ -55,6 +55,8 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 		player2 = false;
 		player3 = false;
 		player4 = false;
+		to_start = false;
+		create_not_join = false;
 		paddle = new Paddle(80, border_right / 2,
 				border_right - barrier_height, barrier_height, 20, -1);
 		comp_paddle = new Paddle(80, border_right / 2, border_right
@@ -131,9 +133,12 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 
 		if (started)
 			paint(second);
-		else
+		else if(to_start && create_not_join)
 			new OpeningScreen(Paddle, ip_text,player2,player3,player4).paint(second);
-
+		else if(to_start && !create_not_join)
+			new JoinGame(Paddle, ip_text).paint(second);
+		else
+			new Choose_Game_Type(Paddle).paint(second);
 		g.drawImage(image, 0, 0, this);
 
 	}
@@ -316,27 +321,39 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		if (!started && arg0.getX() > 80 && arg0.getX() < 340
+		if (to_start && !started && arg0.getX() > 80 && arg0.getX() < 340
 				&& arg0.getY() > 100 && arg0.getY() < 130) {
 			clicked_ip_box = true;
 			ip_text = "";
 		}
-		if (!started && arg0.getX() > 80 && arg0.getX() < 400
+		else if (to_start && create_not_join && !started && arg0.getX() > 80 && arg0.getX() < 400
 				&& arg0.getY() > 140 && arg0.getY() < 170) {
 			player2=!player2;
 		}
-		if (!started && arg0.getX() > 80 && arg0.getX() < 400
+		else if (to_start && create_not_join && !started && arg0.getX() > 80 && arg0.getX() < 400
 				&& arg0.getY() > 180 && arg0.getY() < 210) {
 			player3=!player3;
 		}
-		else if (!started && arg0.getX() > 80 && arg0.getX() < 400
+		else if (to_start && create_not_join && !started && arg0.getX() > 80 && arg0.getX() < 400
 				&& arg0.getY() > 220 && arg0.getY() < 250) {
 			player4=!player4;
 		}
-		else if(! (!started && arg0.getX() > 80 && arg0.getX() < 400
+		else if(to_start && !started && !(arg0.getX() > 80 && arg0.getX() < 400
 				&& arg0.getY() > 80 && arg0.getY() < 280)) {
 			started = true;
 			clicked_ip_box = false;
+		}
+		else if(!to_start && (arg0.getX() > 100 && arg0.getX() < 340
+				&& arg0.getY() > 100 && arg0.getY() < 130))
+		{
+			to_start=true;
+			create_not_join=true;
+		}
+		else if(!to_start && (arg0.getX() > 100 && arg0.getX() < 340
+				&& arg0.getY() > 140 && arg0.getY() < 170))
+		{
+			to_start=true;
+			create_not_join=false;
 		}
 
 	}
