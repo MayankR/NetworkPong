@@ -17,8 +17,10 @@ public class OpeningScreen extends Applet {
 	
 	private URL base;
 	Image ball,b1;
-	OpeningScreen(Image i1)
+	String ip_dat;
+	OpeningScreen(Image i1,String x)
 	{
+		ip_dat=x;
 		try {
 			this.base = base;
 		} catch (Exception e) {
@@ -34,8 +36,8 @@ public class OpeningScreen extends Applet {
 		System.out.println("#@#!@!#!@#!@#!#1   "+ball+"   "+b1);
 		g.drawImage(ball, 0, 0, 100, 100, this);
 		g.drawImage(b1, 100, 100, 100, 100, this);
-		g.setColor(Color.BLUE);
-//		g.fillRect(0, 0, 400, 400);
+		g.setColor(Color.WHITE);
+		g.drawString(ip_dat,100,140);
 	}
 
 

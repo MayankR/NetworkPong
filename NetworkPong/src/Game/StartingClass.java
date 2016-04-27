@@ -23,7 +23,8 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 	private URL base;
 	private Graphics second;
 	int anim_time = 5;
-	boolean started;
+	boolean started, clicked_ip_box;
+	String ip_text = "Your IP Goes Here";
 	final int barrier_height = 50;
 
 	final int border_top = 0, border_bottom = 480, border_left = 0,
@@ -33,6 +34,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 	public void init() {
 		addMouseListener(this);
 		addMouseMotionListener(this);
+		addKeyListener(this);
 		setSize(border_right, border_bottom);
 		setBackground(Color.BLACK);
 		setFocusable(true);
@@ -44,12 +46,12 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 		}
 		Ball = getImage(base, "Data/Ball.png");
 		Paddle = getImage(base, "Data/Paddle.png");
-		System.out.println("FRRRRRR " + base + " " + Ball);
 	}
 
 	@Override
 	public void start() {
 		started = false;
+		clicked_ip_box = false;
 		paddle = new Paddle(80, border_right / 2,
 				border_right - barrier_height, barrier_height, 20, -1);
 		comp_paddle = new Paddle(80, border_right / 2, border_right
@@ -127,7 +129,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 		if (started)
 			paint(second);
 		else
-			new OpeningScreen(Ball).paint(second);
+			new OpeningScreen(Paddle, ip_text).paint(second);
 
 		g.drawImage(image, 0, 0, this);
 
@@ -311,6 +313,11 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		// TODO Auto-generated method stub
+		if (!started && arg0.getX() > 100 && arg0.getX() < 200
+				&& arg0.getY() > 100 && arg0.getY() < 200) {
+			clicked_ip_box = true;
+			ip_text = "";
+		}
 	}
 
 	@Override
@@ -340,7 +347,11 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		started = true;
+		if (!(!started && arg0.getX() > 100 && arg0.getX() < 200
+				&& arg0.getY() > 100 && arg0.getY() < 200)) {
+			started = true;
+			clicked_ip_box = false;
+		}
 
 	}
 
@@ -371,50 +382,34 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 
 	@Override
 	public void keyPressed(KeyEvent arg0) {
-		System.out.println("GEEGEGGEGEGER" + arg0.getKeyCode());
-		if (arg0.getKeyCode() == KeyEvent.VK_LEFT) {
+		if (clicked_ip_box) {
+			System.out.println("FEEEEEEEEEEEEEE  " + arg0.getKeyCode() + "  "
+					+ (arg0.getKeyCode() == KeyEvent.VK_W) + " "
+					+ arg0.getExtendedKeyCode() + "  " + arg0.getKeyChar());
+			switch (arg0.getKeyCode()) {
+			case KeyEvent.VK_ENTER:
+				started = true;
+				break;
+			case KeyEvent.VK_BACK_SPACE:
+				ip_text = (ip_text.length() == 0) ? "" : ip_text.substring(0,
+						ip_text.length() - 1);
+				break;
+			default:
+				ip_text = ip_text + arg0.getKeyChar();
+			}
+		}
+		else if (arg0.getKeyCode() == KeyEvent.VK_LEFT) {
 			paddle.setPos(paddle.getPos() - 10);
-			comp_paddle.setPos(comp_paddle.getPos() - 10);
-			left_paddle.setPos(left_paddle.getPos() - 10);
-			right_paddle.setPos(right_paddle.getPos() - 10);
-			System.out.println("LEFTTTTTTTTTT");
 		} else if (arg0.getKeyCode() == KeyEvent.VK_RIGHT) {
 			paddle.setPos(paddle.getPos() + 10);
-			comp_paddle.setPos(comp_paddle.getPos() + 10);
-			left_paddle.setPos(left_paddle.getPos() + 10);
-			right_paddle.setPos(right_paddle.getPos() + 10);
 		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent arg0) {
-		if (arg0.getKeyCode() == KeyEvent.VK_LEFT) {
-			paddle.setPos(paddle.getPos() - 10);
-			comp_paddle.setPos(comp_paddle.getPos() - 10);
-			left_paddle.setPos(left_paddle.getPos() - 10);
-			right_paddle.setPos(right_paddle.getPos() - 10);
-			System.out.println("LEFTTTTTTTTTT");
-		} else if (arg0.getKeyCode() == KeyEvent.VK_RIGHT) {
-			paddle.setPos(paddle.getPos() + 10);
-			comp_paddle.setPos(comp_paddle.getPos() + 10);
-			left_paddle.setPos(left_paddle.getPos() + 10);
-			right_paddle.setPos(right_paddle.getPos() + 10);
-		}
 	}
 
 	@Override
 	public void keyTyped(KeyEvent arg0) {
-		if (arg0.getKeyCode() == KeyEvent.VK_LEFT) {
-			paddle.setPos(paddle.getPos() - 10);
-			comp_paddle.setPos(comp_paddle.getPos() - 10);
-			left_paddle.setPos(left_paddle.getPos() - 10);
-			right_paddle.setPos(right_paddle.getPos() - 10);
-			System.out.println("LEFTTTTTTTTTT");
-		} else if (arg0.getKeyCode() == KeyEvent.VK_RIGHT) {
-			paddle.setPos(paddle.getPos() + 10);
-			comp_paddle.setPos(comp_paddle.getPos() + 10);
-			left_paddle.setPos(left_paddle.getPos() + 10);
-			right_paddle.setPos(right_paddle.getPos() + 10);
-		}
 	}
 }
