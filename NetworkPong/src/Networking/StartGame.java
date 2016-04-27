@@ -6,19 +6,25 @@ import java.net.*;
 public class StartGame {
 	UserType type;
 	String myUserName = "";
+	int startGamePort = 9876;
+	String myIP;
+	String[] IP = new String[4];
+	int playerCount = 0;
 	
-	public StartGame(UserType type, String userName, String ip1, String ip2, String ip3, String ip4) {
+	public StartGame(UserType type, String userName, String ip1, int numPlayers) {
 		this.type = type;
-		if(type == UserType.JOIN) {
+		if(type == UserType.START) {
 			try {
-				startJoining(getPort(ip1), userName);
+				playerCount = numPlayers;
+				connectUsers(startGamePort, userName, numPlayers);
 			}
 			catch(Exception e) {
-				System.out.println("Unable to Join Game... :(");
+				System.out.println("Unable to Start Game... :(");
 			}
 		}
 		else {
-			connectUsers(ip1, ip2, ip3, ip4, userName);
+			IP[0] = ip1;
+			startJoining(ip1, startGamePort, userName);
 		}
 	}
 	
@@ -30,92 +36,99 @@ public class StartGame {
 		return last*21;
 	}
 	
-	private void startJoining(int myPort, String userName) throws Exception {
+	private void setPlayerData(String data, int num) {
+		String uName = "", ip = "";
+		int i=0;
+		while(data.charAt(i) != ';') {
+			uName = uName + data.charAt(i);
+			i++;
+		}
+		i++;
+		while(i<data.length()) {
+			ip = ip + data.charAt(i);
+			i++;
+		}
+		myIP = ip;
+	}
+	
+	private void connectUsers(int myPort, String userName, int numPlayers) throws Exception {
 		DatagramSocket serverSocket = new DatagramSocket(myPort);
         byte[] sendData = new byte[1024];
-        while(true) {
+        for(int i=1;i<=numPlayers;i++) {
         	byte[] receiveData = new byte[1024];
-        	//Receive user name of P1
+        	//Receive user name of a player and my IP
         	DatagramPacket receivePacket = 
         			new DatagramPacket(receiveData, receiveData.length);
         	serverSocket.receive(receivePacket);
-        	String name1 = new String( receivePacket.getData());
-        	System.out.println("RECEIVED: " + name1);
+        	String data1 = new String( receivePacket.getData());
+        	System.out.println("RECEIVED: " + data1);
         	
-        	InetAddress IPAddress = receivePacket.getAddress();
+        	//Store my IP and player user name
+        	setPlayerData(data1, i);
+        	
+        	InetAddress IPAddressPlayer = receivePacket.getAddress();
         	int port = receivePacket.getPort();
         	
-        	//Send own user name to P1
-        	sendData = userName.getBytes();
-        	DatagramPacket sendPacket =
-        			new DatagramPacket(sendData, sendData.length, IPAddress, port);
-        	serverSocket.send(sendPacket);
+        	//Store player IP
+        	IP[i] = IPAddressPlayer.toString();
         	
-        	byte[] receiveIPData = new byte[1024];
-        	//Receive all IP address from P1
-        	DatagramPacket receiveIPPacket = 
-        			new DatagramPacket(receiveIPData, receiveIPData.length);
-        	serverSocket.receive(receiveIPPacket);
-        	String ipData = new String( receiveIPPacket.getData());
-        	System.out.println("RECEIVED IP DATA: " + ipData);
-        	serverSocket.close();
-        	break;
+        	//Send own user name, player IP and total player count to Player
+        	String data = userName + ";" + IPAddressPlayer + ";" + numPlayers;
+        	sendData = data.getBytes();
+        	DatagramPacket sendPacket =
+        			new DatagramPacket(sendData, sendData.length, IPAddressPlayer, port);
+        	serverSocket.send(sendPacket);
         }
+    	serverSocket.close();
+    	System.out.println("Got data of all users");
 	}
 	
-	public void connectUsers(String ip1, String ip2, String ip3, String ip4, String userName) {
-		int totPlayers = 0;
-		String data = "";
-		if(!ip1.equals("")) {
-			totPlayers++;
-			data = data + ";" + ip1;
-		}
-		if(!ip2.equals("")) {
-			totPlayers++;
-			data = data + ";" + ip2;
-		}
-		if(!ip3.equals("")) {
-			totPlayers++;
-			data = data + ";" + ip3;
-		}
-		if(!ip4.equals("")) {
-			totPlayers++;
-			data = data + ";" + ip4;
-		}
+	public void startJoining(String ip1, int port, String userName) {
+		String data = ip1 + ";" + userName;
+
 		try {
-			connectToIP(ip1, getPort(ip1), userName, "1;"+totPlayers+data);
-			connectToIP(ip2, getPort(ip2), userName, "2;"+totPlayers+data);
-			connectToIP(ip3, getPort(ip3), userName, "3;"+totPlayers+data);
-			connectToIP(ip4, getPort(ip4), userName, "4;"+totPlayers+data);
+			connectToIP(ip1, startGamePort, data);
 		}
 		catch(Exception e) {
 			
 		}
 	}
 	
-	private void connectToIP(String ip, int port, String userName, String data) throws Exception {
+	private void connectToIP(String ip, int port, String data) throws Exception {
 //		BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
 		DatagramSocket clientSocket = new DatagramSocket();
 		InetAddress IPAddress = InetAddress.getByName(ip);
 		
+		//Send my data to server IP
 		byte[] sendData = new byte[1024];
 		byte[] receiveData = new byte[1024];
-		String sentence = userName;
+		String sentence = data;
 		sendData = sentence.getBytes();
 		DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);
 		clientSocket.send(sendPacket);
 		
 		DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
 		clientSocket.receive(receivePacket);
-		String modifiedSentence = new String(receivePacket.getData());
-		System.out.println("Name of user at IP " + ip + " is " + modifiedSentence);
+		String serverData = new String(receivePacket.getData());
+		System.out.println("Data from server is" + serverData);
 		
-		byte[] sendIPData = new byte[1024];
-		String IPsentence = data;
-		sendIPData = IPsentence.getBytes();
-		DatagramPacket sendIPPacket = new DatagramPacket(sendIPData, sendIPData.length, IPAddress, port);
-		
-		clientSocket.send(sendIPPacket);
+		String serverName = "", serverIP = "", totPlayers = "";
+		int i=0;
+		while(serverData.charAt(i) != ';') {
+			serverName = serverName + serverData.charAt(i); 
+			i++;
+		}
+		i++;
+		while(serverData.charAt(i) != ';') {
+			serverIP = serverIP + serverData.charAt(i); 
+			i++;
+		}
+		i++;
+		while(i < serverData.length()) {
+			totPlayers = totPlayers + serverData.charAt(i); 
+			i++;
+		}
+		playerCount = Integer.parseInt(totPlayers);
 		
 		clientSocket.close();
 	}
