@@ -23,7 +23,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 	private URL base;
 	private Graphics second;
 	int anim_time = 5;
-	boolean started, clicked_ip_box;
+	boolean started, clicked_ip_box,player2,player3,player4;
 	String ip_text = "Your IP Goes Here";
 	final int barrier_height = 50;
 
@@ -52,6 +52,9 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 	public void start() {
 		started = false;
 		clicked_ip_box = false;
+		player2 = false;
+		player3 = false;
+		player4 = false;
 		paddle = new Paddle(80, border_right / 2,
 				border_right - barrier_height, barrier_height, 20, -1);
 		comp_paddle = new Paddle(80, border_right / 2, border_right
@@ -129,7 +132,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 		if (started)
 			paint(second);
 		else
-			new OpeningScreen(Paddle, ip_text).paint(second);
+			new OpeningScreen(Paddle, ip_text,player2,player3,player4).paint(second);
 
 		g.drawImage(image, 0, 0, this);
 
@@ -313,11 +316,29 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		if (!started && arg0.getX() > 100 && arg0.getX() < 200
-				&& arg0.getY() > 100 && arg0.getY() < 200) {
+		if (!started && arg0.getX() > 80 && arg0.getX() < 340
+				&& arg0.getY() > 100 && arg0.getY() < 130) {
 			clicked_ip_box = true;
 			ip_text = "";
 		}
+		if (!started && arg0.getX() > 80 && arg0.getX() < 400
+				&& arg0.getY() > 140 && arg0.getY() < 170) {
+			player2=!player2;
+		}
+		if (!started && arg0.getX() > 80 && arg0.getX() < 400
+				&& arg0.getY() > 180 && arg0.getY() < 210) {
+			player3=!player3;
+		}
+		else if (!started && arg0.getX() > 80 && arg0.getX() < 400
+				&& arg0.getY() > 220 && arg0.getY() < 250) {
+			player4=!player4;
+		}
+		else if(! (!started && arg0.getX() > 80 && arg0.getX() < 400
+				&& arg0.getY() > 80 && arg0.getY() < 280)) {
+			started = true;
+			clicked_ip_box = false;
+		}
+
 	}
 
 	@Override
@@ -347,12 +368,6 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		if (!(!started && arg0.getX() > 100 && arg0.getX() < 200
-				&& arg0.getY() > 100 && arg0.getY() < 200)) {
-			started = true;
-			clicked_ip_box = false;
-		}
-
 	}
 
 	@Override
@@ -383,9 +398,6 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		if (clicked_ip_box) {
-			System.out.println("FEEEEEEEEEEEEEE  " + arg0.getKeyCode() + "  "
-					+ (arg0.getKeyCode() == KeyEvent.VK_W) + " "
-					+ arg0.getExtendedKeyCode() + "  " + arg0.getKeyChar());
 			switch (arg0.getKeyCode()) {
 			case KeyEvent.VK_ENTER:
 				started = true;
@@ -395,7 +407,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 						ip_text.length() - 1);
 				break;
 			default:
-				ip_text = ip_text + arg0.getKeyChar();
+				ip_text = ip_text.length()==15?ip_text:ip_text + arg0.getKeyChar();
 			}
 		}
 		else if (arg0.getKeyCode() == KeyEvent.VK_LEFT) {
