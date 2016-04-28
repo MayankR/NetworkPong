@@ -32,6 +32,29 @@ public class PlayGame {
 		clientSocket.close();
 	}
 	
+	public static void triggerStart() throws Exception {
+		DatagramSocket clientSocket = new DatagramSocket();
+		byte[] sendData = new byte[1024];
+	    System.out.println("Broadcasting my position");
+		String sentence = "g;";
+		sendData = sentence.getBytes();
+	    
+		for(int i=0;i<4;i++) {
+			if(!human[i]) continue;
+			if(i == myNum-1) continue;
+			
+			InetAddress IPAddress = InetAddress.getByName(IP[i]);
+			
+			System.out.println("Sending start trigger to: " + i + " at IP: " + IP[i]);
+			
+			DatagramPacket sendPacket = 
+					new DatagramPacket(sendData, sendData.length, IPAddress, playGamePort);
+			clientSocket.send(sendPacket);
+		}
+		
+		clientSocket.close();
+	}
+	
 	public static void setPos(int playerNum, int pos) {
 		posArray[playerNum - 1] = pos;
 	}
