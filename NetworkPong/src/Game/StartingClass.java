@@ -594,12 +594,38 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 			}
 			for (int b = 0; b < n_balls; b++) {
 				if (ball[b].isOnPaddle()) {
-					ball[b].setSpeedY(-2.5f);
-					ball[b].setSpeedX((ball[b].getX() - paddle.getPos())
-							/ ((float) paddle.getSize()) * 2);
 					ball[b].setOnPaddle(false);
+					switch(playerNum)
+					{
+						case 1 	: 	ball[b].setSpeedY(-2.5f);
+									ball[b].setSpeedX((ball[b].getX() - paddle.getPos())
+								/ ((float) paddle.getSize()) * 2);
+						
+								break;
+								
+						case 2 	: 	ball[b].setSpeedX(-2.5f);
+								ball[b].setSpeedY(-((ball[b].getX() - paddle.getPos())
+							/ ((float) paddle.getSize()) * 2));
+			
+
+							break;
+									
+						case 3 	: 	ball[b].setSpeedY(2.5f);
+								ball[b].setSpeedX(-((ball[b].getX() - paddle.getPos())
+							/ ((float) paddle.getSize()) * 2));
+					
+							break;
+									
+						case 4 	: 	ball[b].setSpeedX(2.5f);
+								ball[b].setSpeedY(((ball[b].getX() - paddle.getPos())
+							/ ((float) paddle.getSize()) * 2));
+	
+
+									break;		
+					}
 				}
 			}
+
 		}
 	}
 
