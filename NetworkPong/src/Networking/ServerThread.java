@@ -21,7 +21,7 @@ public class ServerThread extends Thread {
 //	        	System.out.println("RECEIVED: " + data);
 	        	
 	        	if(data.charAt(0) == 'g') {
-	        		
+	        		PlayGame.scc.hostMousePressed();
 	        	}
 	        	
 	        	int playerNum = Integer.parseInt("" + data.charAt(0));

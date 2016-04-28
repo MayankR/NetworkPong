@@ -479,7 +479,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 				StartGame sg = new StartGame(UserType.JOIN, "JoiningPlayer", ip_text, 1, this);
 			}
 			allJoined=true;
-			PlayGame.startGettingData();
+			PlayGame.startGettingData(this);
 
 		} else if (to_start && create_not_join && level_select
 				&& !started
@@ -497,7 +497,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 				StartGame sg = new StartGame(UserType.JOIN, "JoiningPlayer", ip_text, 1, this);
 			}
 			allJoined=true;
-			PlayGame.startGettingData();
+			PlayGame.startGettingData(this);
 		} else if (to_start && create_not_join && level_select
 				&& !started
 				&& (arg0.getX() > 100 && arg0.getX() < 340 && arg0.getY() > 140 && arg0
@@ -514,7 +514,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 				StartGame sg = new StartGame(UserType.JOIN, "JoiningPlayer", ip_text, 1, this);
 			}
 			allJoined=true;
-			PlayGame.startGettingData();
+			PlayGame.startGettingData(this);
 		} else if (to_start && create_not_join && !level_select
 				&& !started
 				&& !(arg0.getX() > 80 && arg0.getX() < 400 && arg0.getY() > 80 && arg0
@@ -535,7 +535,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 				StartGame sg = new StartGame(UserType.JOIN, "JoiningPlayer", ip_text, 1, this);
 			}
 			allJoined=true;
-			PlayGame.startGettingData();
+			PlayGame.startGettingData(this);
 		} else if (!to_start
 				&& (arg0.getX() > 100 && arg0.getX() < 340 && arg0.getY() > 100 && arg0
 						.getY() < 130)) {
@@ -566,6 +566,32 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 	public void mousePressed(MouseEvent arg0) {
 		if (started && ball[0].isOnPaddle() && playerNum==1)
 		{
+			try {
+				PlayGame.triggerStart();
+			}
+			catch(Exception e) {
+				e.printStackTrace();
+			}
+			for (int b = 0; b < n_balls; b++) {
+				if (ball[b].isOnPaddle()) {
+					ball[b].setSpeedY(-2.5f);
+					ball[b].setSpeedX((ball[b].getX() - paddle.getPos())
+							/ ((float) paddle.getSize()) * 2);
+					ball[b].setOnPaddle(false);
+				}
+			}
+		}
+	}
+	
+	public void hostMousePressed() {
+		if (started && ball[0].isOnPaddle() && playerNum==1)
+		{
+			try {
+				PlayGame.triggerStart();
+			}
+			catch(Exception e) {
+				e.printStackTrace();
+			}
 			for (int b = 0; b < n_balls; b++) {
 				if (ball[b].isOnPaddle()) {
 					ball[b].setSpeedY(-2.5f);

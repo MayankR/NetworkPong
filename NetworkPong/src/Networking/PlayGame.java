@@ -2,12 +2,15 @@ package Networking;
 
 import java.net.*;
 
+import Game.StartingClass;
+
 public class PlayGame {
 	public static String[] IP = {"", "", "", ""};
 	public static boolean[] human = {true, false, false, false};
 	public static int myNum = 1;
 	static int playGamePort = 9879;
 	static int[] posArray = {0, 0, 0, 0};
+	static StartingClass scc = null;
 	
 	public static void sendPos(int pos) throws Exception {
 		DatagramSocket clientSocket = new DatagramSocket();
@@ -66,7 +69,8 @@ public class PlayGame {
 		return posArray[serverNum - 1];
 	}
 	
-	public static void startGettingData() {
+	public static void startGettingData(StartingClass sc) {
+		scc = sc;
 		ServerThread st = new ServerThread();
 //		System.out.println("Starting server thread to get data");
 		st.start();
