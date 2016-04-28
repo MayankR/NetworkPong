@@ -97,7 +97,7 @@ public class StartGame {
         	playerPorts[cur] = port;
         	PlayGame.IP[cur] = IP[cur];
         	
-        	System.out.println("Joining PLayer IP stored: " + IP[cur] + " at index " + cur);
+        	System.out.println("Joining PLayer IP stored: " + IP[cur] + " at index " + (cur + 1));
         	cur++;
 
             byte[] sendData = new byte[1024];
@@ -194,6 +194,7 @@ public class StartGame {
 		System.out.println("Player count: " + playerCount);
 		System.out.println("My player number: " + myNum);
 		
+		mGame.playerNum = Integer.parseInt(myNum);
 		PlayGame.myNum = mGame.playerNum;
 		
 		byte[] receivePlayersData = new byte[1024];
