@@ -3,22 +3,33 @@ package Networking;
 import java.io.*;
 import java.net.*;
 
+import Game.StartingClass;
+
 public class StartGame {
 	UserType type;
 	String myUserName = "";
 	int startGamePort = 9876;
 	String myIP;
-	String[] IP = new String[4];
+	String[] IP = {"", "", "", ""};
 	int playerCount = 0;
+	StartingClass mGame = null;
+	boolean[] human = {true, false, false, false};
 	
-	public StartGame(UserType type, String userName, String ip1, int numPlayers) {
+	public StartGame(UserType type, String userName, String ip1, int numPlayers, StartingClass game) {
 		this.type = type;
+		mGame = game;
+		numPlayers = 0;
+		if(mGame.player2) { numPlayers++; human[1] = true; }
+		if(mGame.player3) { numPlayers++; human[2] = true; }
+		if(mGame.player4) { numPlayers++; human[3] = true; }
+		System.out.println("Number of players including me: " + (numPlayers + 1));
 		if(type == UserType.START) {
 			try {
 				playerCount = numPlayers;
 				connectUsers(startGamePort, userName, numPlayers);
 			}
 			catch(Exception e) {
+				e.printStackTrace();
 				System.out.println("Unable to Start Game... :(");
 			}
 		}
@@ -48,12 +59,14 @@ public class StartGame {
 			ip = ip + data.charAt(i);
 			i++;
 		}
+		System.out.println("Setting server IP as: " + ip);
 		myIP = ip;
 	}
 	
 	private void connectUsers(int myPort, String userName, int numPlayers) throws Exception {
 		DatagramSocket serverSocket = new DatagramSocket(myPort);
-        byte[] sendData = new byte[1024];
+        int cur = 1;
+        System.out.println("Waiting to join");
         for(int i=1;i<=numPlayers;i++) {
         	byte[] receiveData = new byte[1024];
         	//Receive user name of a player and my IP
@@ -61,23 +74,52 @@ public class StartGame {
         			new DatagramPacket(receiveData, receiveData.length);
         	serverSocket.receive(receivePacket);
         	String data1 = new String( receivePacket.getData());
-        	System.out.println("RECEIVED: " + data1);
+        	System.out.println("SERVER RECEIVED: " + data1);
         	
         	//Store my IP and player user name
         	setPlayerData(data1, i);
+        	System.out.println("Server player data set");
         	
         	InetAddress IPAddressPlayer = receivePacket.getAddress();
         	int port = receivePacket.getPort();
         	
         	//Store player IP
-        	IP[i] = IPAddressPlayer.toString();
+        	while(!human[cur]) { cur++; }
+        	IP[cur] = IPAddressPlayer.toString();
+        	IP[cur] = IP[cur].substring(1, IP[cur].length());
         	
+        	System.out.println("Joining PLayer IP stored: " + IP[cur]);
+
+            byte[] sendData = new byte[1024];
         	//Send own user name, player IP and total player count to Player
-        	String data = userName + ";" + IPAddressPlayer + ";" + numPlayers;
+        	String data = userName + ";" + IPAddressPlayer + ";" + numPlayers + ";" + (cur + 1);
         	sendData = data.getBytes();
         	DatagramPacket sendPacket =
         			new DatagramPacket(sendData, sendData.length, IPAddressPlayer, port);
         	serverSocket.send(sendPacket);
+        }
+        System.out.println("Joined all players once");
+        
+        //Make string to send to all players
+        String allIP = "";
+        for(int i=0;i<=3;i++) {
+        	allIP = allIP + IP[i] + ";";
+        }
+        System.out.println("Made string of all IP");
+
+        //Send all IP to All players
+        for(int i=1;i<=3;i++) {
+        	if(!human[i]) continue;
+            byte[] sendDataIP = new byte[1024];
+        	sendDataIP = allIP.getBytes();
+        	System.out.println("Set IP data to send");
+        	InetAddress playerIP = InetAddress.getByName(IP[i]);
+        	System.out.println("made InetAddress");
+        	DatagramPacket sendPacket =
+        			new DatagramPacket(sendDataIP, sendDataIP.length, playerIP, startGamePort);
+        	System.out.println("Made packet");
+        	serverSocket.send(sendPacket);
+        	System.out.println("Packet Sent");
         }
     	serverSocket.close();
     	System.out.println("Got data of all users");
@@ -90,7 +132,8 @@ public class StartGame {
 			connectToIP(ip1, startGamePort, data);
 		}
 		catch(Exception e) {
-			
+			e.printStackTrace();
+			System.out.println("Unable to connect to server.");
 		}
 	}
 	
@@ -110,9 +153,9 @@ public class StartGame {
 		DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
 		clientSocket.receive(receivePacket);
 		String serverData = new String(receivePacket.getData());
-		System.out.println("Data from server is" + serverData);
+		System.out.println("Data from server is " + serverData);
 		
-		String serverName = "", serverIP = "", totPlayers = "";
+		String serverName = "", serverIP = "", totPlayers = "", myNum = "";
 		int i=0;
 		while(serverData.charAt(i) != ';') {
 			serverName = serverName + serverData.charAt(i); 
@@ -124,12 +167,46 @@ public class StartGame {
 			i++;
 		}
 		i++;
-		while(i < serverData.length()) {
+		while(serverData.charAt(i) != ';') {
 			totPlayers = totPlayers + serverData.charAt(i); 
 			i++;
 		}
+		i++;
+		while(i < serverData.length()) {
+			myNum = myNum + serverData.charAt(i); 
+			i++;
+		}
 		playerCount = Integer.parseInt(totPlayers);
+		System.out.println("Player count: " + playerCount);
+		System.out.println("My player number: " + myNum);
+		mGame.playerNum = Integer.parseInt(myNum);
+		System.out.println("My player number: " + myNum);
 		
+
+		byte[] receivePlayersData = new byte[1024];
+		
+		//Receive all IP
+		DatagramPacket receivePlayerPacket = new DatagramPacket(receivePlayersData, receivePlayersData.length);
+		clientSocket.receive(receivePlayerPacket);
+		String serverPlayersData = new String(receivePlayerPacket.getData());
+		System.out.println("More data from server: " + serverPlayersData);
+		
+		String curIP = "";
+		int in=0, indexIP = 0;
+		while(in < serverPlayersData.length()) {
+			while(serverPlayersData.charAt(in) != ';') {
+				curIP = curIP + serverPlayersData.charAt(in);
+				in++;
+			}
+			in++;
+			System.out.println("player IP: " + curIP);
+			IP[indexIP] = curIP;
+			curIP = "";
+			indexIP++;
+		}
+		if(!IP[1].equals("")) { mGame.player2 = true; }
+		if(!IP[2].equals("")) { mGame.player3 = true; }
+		if(!IP[3].equals("")) { mGame.player4 = true; }
 		clientSocket.close();
 	}
 }

@@ -12,6 +12,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.net.URL;
 
+import Networking.StartGame;
+import Networking.UserType;
+
 @SuppressWarnings("serial")
 public class StartingClass extends Applet implements Runnable, MouseListener,
 		MouseMotionListener, KeyListener {
@@ -23,12 +26,13 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 	private URL base;
 	private Graphics second;
 	int anim_time = 5;
-	boolean started, clicked_ip_box,player2,player3,player4,to_start,create_not_join;
+	public boolean started, clicked_ip_box,player2,player3,player4,to_start,create_not_join;
 	String ip_text = "Your IP Goes Here";
 	final int barrier_height = 50;
 
 	final int border_top = 0, border_bottom = 480, border_left = 0,
 			border_right = 480;
+	public int playerNum = 1;
 
 	@Override
 	public void init() {
@@ -300,7 +304,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 								: -10)));
 			t2 = System.currentTimeMillis();
 			t3 += t2 - t1;
-			System.out.println(t3);
+//			System.out.println(t3);
 			if (t3 <= anim_time) {
 				flag = true;
 				t4 = t3;
@@ -342,6 +346,12 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 				&& arg0.getY() > 80 && arg0.getY() < 280)) {
 			started = true;
 			clicked_ip_box = false;
+			if(create_not_join) {
+				StartGame sg = new StartGame(UserType.START, "ServerPlayer", "", 0, this);
+			}
+			else {
+				StartGame sg = new StartGame(UserType.JOIN, "JoiningPlayer", ip_text, 1, this);
+			}
 		}
 		else if(!to_start && (arg0.getX() > 100 && arg0.getX() < 340
 				&& arg0.getY() > 100 && arg0.getY() < 130))
