@@ -18,7 +18,7 @@ public class ServerThread extends Thread {
 	        	DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
 	        	serverSocket.receive(receivePacket);
 	        	String data = new String( receivePacket.getData());
-	        	System.out.println("RECEIVED: " + data);
+//	        	System.out.println("RECEIVED: " + data);
 	        	
 	        	int playerNum = Integer.parseInt("" + data.charAt(0));
 	        	int i = 2;
