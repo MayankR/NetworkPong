@@ -3,16 +3,16 @@ package Networking;
 import java.net.*;
 
 public class PlayGame {
-	static String[] IP = {"", "", "", ""};
-	static boolean[] human = {true, false, false, false};
-	static int myNum = 1;
+	public static String[] IP = {"", "", "", ""};
+	public static boolean[] human = {true, false, false, false};
+	public static int myNum = 1;
 	static int playGamePort = 9876;
+	static int[] posArray = {0, 0, 0, 0};
 	
 	public static void sendPos(int pos) throws Exception {
 		DatagramSocket clientSocket = new DatagramSocket();
 		byte[] sendData = new byte[1024];
-	       
-	       
+	    System.out.println("Broadcasting my position");
 		String sentence = myNum + ";" + pos;
 		sendData = sentence.getBytes();
 	    
@@ -20,6 +20,9 @@ public class PlayGame {
 			if(!human[i]) continue;
 			
 			InetAddress IPAddress = InetAddress.getByName(IP[i]);
+			
+			System.out.println("Sending to: " + i + " at IP: " + IP[i]);
+			
 			DatagramPacket sendPacket = 
 					new DatagramPacket(sendData, sendData.length, IPAddress, playGamePort);
 			clientSocket.send(sendPacket);
@@ -28,7 +31,20 @@ public class PlayGame {
 		clientSocket.close();
 	}
 	
-	public static void getData() {
-		
+	public static void setPos(int playerNum, int pos) {
+		posArray[playerNum - 1] = pos;
+	}
+	
+	public static int getPos(int playerNum) {
+		int serverNum = (playerNum + myNum - 1);
+		if(serverNum > 4) serverNum -= 4;
+		System.out.println("Sending back requested pos of player " + playerNum);
+		return posArray[serverNum - 1];
+	}
+	
+	public static void startGettingData() {
+		ServerThread st = new ServerThread();
+		System.out.println("Starting server thread to get data");
+		st.start();
 	}
 }

@@ -18,11 +18,11 @@ public class StartGame {
 	public StartGame(UserType type, String userName, String ip1, int numPlayers, StartingClass game) {
 		this.type = type;
 		mGame = game;
-		numPlayers = 0;
-		if(mGame.player2) { numPlayers++; human[1] = true; }
-		if(mGame.player3) { numPlayers++; human[2] = true; }
-		if(mGame.player4) { numPlayers++; human[3] = true; }
-		System.out.println("Number of players including me: " + (numPlayers + 1));
+		numPlayers = 1;
+		if(mGame.player2) { numPlayers++; human[1] = true; PlayGame.human[1] = true;}
+		if(mGame.player3) { numPlayers++; human[2] = true; PlayGame.human[2] = true; }
+		if(mGame.player4) { numPlayers++; human[3] = true; PlayGame.human[3] = true; }
+		System.out.println("Number of players including me: " + (numPlayers));
 		if(type == UserType.START) {
 			try {
 				playerCount = numPlayers;
@@ -35,6 +35,7 @@ public class StartGame {
 		}
 		else {
 			IP[0] = ip1;
+			PlayGame.IP[0] = ip1;
 			startJoining(ip1, startGamePort, userName);
 		}
 	}
@@ -67,7 +68,7 @@ public class StartGame {
 		DatagramSocket serverSocket = new DatagramSocket(myPort);
         int cur = 1;
         System.out.println("Waiting to join");
-        for(int i=1;i<=numPlayers;i++) {
+        for(int i=1;i<numPlayers;i++) {
         	byte[] receiveData = new byte[1024];
         	//Receive user name of a player and my IP
         	DatagramPacket receivePacket = 
@@ -87,6 +88,7 @@ public class StartGame {
         	while(!human[cur]) { cur++; }
         	IP[cur] = IPAddressPlayer.toString();
         	IP[cur] = IP[cur].substring(1, IP[cur].length());
+        	PlayGame.IP[cur] = IP[cur];
         	
         	System.out.println("Joining PLayer IP stored: " + IP[cur]);
 
@@ -172,15 +174,18 @@ public class StartGame {
 			i++;
 		}
 		i++;
-		while(i < serverData.length()) {
-			myNum = myNum + serverData.charAt(i); 
-			i++;
-		}
+//		while(i < serverData.length()) {
+//			myNum = myNum + serverData.charAt(i); 
+//			i++;
+//		}
+		myNum = "" + serverData.charAt(i);
 		playerCount = Integer.parseInt(totPlayers);
 		System.out.println("Player count: " + playerCount);
 		System.out.println("My player number: " + myNum);
 		mGame.playerNum = Integer.parseInt(myNum);
 		System.out.println("My player number: " + myNum);
+		
+		PlayGame.myNum = mGame.playerNum;
 		
 
 		byte[] receivePlayersData = new byte[1024];
@@ -201,12 +206,18 @@ public class StartGame {
 			in++;
 			System.out.println("player IP: " + curIP);
 			IP[indexIP] = curIP;
+			PlayGame.IP[indexIP] = curIP;
 			curIP = "";
 			indexIP++;
 		}
-		if(!IP[1].equals("")) { mGame.player2 = true; }
-		if(!IP[2].equals("")) { mGame.player3 = true; }
-		if(!IP[3].equals("")) { mGame.player4 = true; }
+		if(!IP[(1 + mGame.playerNum - 1)%4].equals("")) { mGame.player2 = true; }
+		if(!IP[(2 + mGame.playerNum - 1)%4].equals("")) { mGame.player3 = true; }
+		if(!IP[(3 + mGame.playerNum - 1)%4].equals("")) { mGame.player4 = true; }
+
+		if(!IP[1].equals("")) { PlayGame.human[1] = true; }
+		if(!IP[2].equals("")) { PlayGame.human[2] = true; }
+		if(!IP[3].equals("")) { PlayGame.human[3] = true; }
+		
 		clientSocket.close();
 	}
 }
