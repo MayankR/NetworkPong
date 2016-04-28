@@ -12,7 +12,7 @@ public class ServerThread extends Thread {
 	public void run() {
         System.out.println("Hello from a thread!");
         try {
-	        DatagramSocket serverSocket = new DatagramSocket(9878);
+	        DatagramSocket serverSocket = new DatagramSocket(9879);
 	        while(true) {
 	        	byte[] receiveData = new byte[1024];
 	        	DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
@@ -21,7 +21,13 @@ public class ServerThread extends Thread {
 	        	System.out.println("RECEIVED: " + data);
 	        	
 	        	int playerNum = Integer.parseInt("" + data.charAt(0));
-	        	int playerPos = Integer.parseInt(data.substring(2, data.length()));
+	        	int i = 2;
+	        	String playerPosString = "";
+	        	while(data.charAt(i) != ';') {
+	        		playerPosString += data.charAt(i);
+	        		i++;
+	        	}
+	        	int playerPos = Integer.parseInt(playerPosString);
 	        	
 	        	PlayGame.setPos(playerNum, playerPos);
 	        	

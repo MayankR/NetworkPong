@@ -13,11 +13,12 @@ public class PlayGame {
 		DatagramSocket clientSocket = new DatagramSocket();
 		byte[] sendData = new byte[1024];
 	    System.out.println("Broadcasting my position");
-		String sentence = myNum + ";" + pos;
+		String sentence = myNum + ";" + pos + ";";
 		sendData = sentence.getBytes();
 	    
 		for(int i=0;i<4;i++) {
 			if(!human[i]) continue;
+			if(i == myNum-1) continue;
 			
 			InetAddress IPAddress = InetAddress.getByName(IP[i]);
 			

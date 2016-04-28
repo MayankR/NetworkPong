@@ -67,6 +67,7 @@ public class StartGame {
 		System.out.println("Setting server IP as: " + uName);
 		myIP = uName;
 		IP[0] = uName;
+		PlayGame.IP[0] = uName;
 	}
 	
 	private void connectUsers(int myPort, String userName, int numPlayers) throws Exception {
