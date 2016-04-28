@@ -391,12 +391,18 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 				}
 			}
 			
-			
-			if (ball[0].getX() != border_right - comp_paddle.getPos())
-				comp_paddle
-						.setPos((int) (border_right - ball[0].getX() + (ball[0]
-								.getX() - border_right - comp_paddle.getPos() >= 0 ? 10
-								: -10)));
+			if(!player3)
+			{
+				if (ball[0].getX() != border_right - comp_paddle.getPos())
+					comp_paddle
+							.setPos((int) (border_right - ball[0].getX() + (ball[0]
+									.getX() - border_right - comp_paddle.getPos() >= 0 ? 10
+									: -10)));
+			}
+			else if(started && allJoined)
+			{
+				PlayGame.getPos(3);
+			}
 			if(!player2)
 			{
 				if (ball[0].getY() != border_bottom - comp_paddle.getPos())
@@ -409,12 +415,19 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 			{
 				PlayGame.getPos(2);
 			}
-					
-			if (ball[0].getY() != border_bottom - comp_paddle.getPos())
-				right_paddle
-						.setPos((int) (border_bottom - ball[0].getY() - (ball[0]
-								.getY() - border_right - right_paddle.getPos() >= 0 ? 10
-								: -10)));
+			if(!player4)
+			{
+				if (ball[0].getY() != border_bottom - comp_paddle.getPos())
+					right_paddle
+							.setPos((int) (border_bottom - ball[0].getY() - (ball[0]
+									.getY() - border_right - right_paddle.getPos() >= 0 ? 10
+									: -10)));
+			}
+			else if(started && allJoined)
+			{
+				PlayGame.getPos(4);
+			}
+			
 			t2 = System.currentTimeMillis();
 			t3 += t2 - t1;
 			if (t3 <= anim_time) {
@@ -467,26 +480,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 			}
 			allJoined=true;
 			PlayGame.startGettingData();
-//<<<<<<< HEAD
-//			if(create_not_join) {
-//				StartGame sg = new StartGame(UserType.START, "ServerPlayer", "", 0, this);
-//			}
-//			else {
-//				StartGame sg = new StartGame(UserType.JOIN, "JoiningPlayer", ip_text, 1, this);
-//			}
-//		}
-//		else if(!to_start && (arg0.getX() > 100 && arg0.getX() < 340
-//				&& arg0.getY() > 100 && arg0.getY() < 130))
-//		{
-//			to_start=true;
-//			create_not_join=true;
-//		}
-//		else if(!to_start && (arg0.getX() > 100 && arg0.getX() < 340
-//				&& arg0.getY() > 140 && arg0.getY() < 170))
-//		{
-//			to_start=true;
-//			create_not_join=false;
-//=======
+
 		} else if (to_start && create_not_join && level_select
 				&& !started
 				&& (arg0.getX() > 100 && arg0.getX() < 340 && arg0.getY() > 100 && arg0
