@@ -13,6 +13,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.net.URL;
 
+import Networking.PlayGame;
 import Networking.StartGame;
 import Networking.UserType;
 
@@ -30,7 +31,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 	int paddle_life, comp_life, left_life, right_life;					// paddle lives for the four paddles
 	int anim_time = 5;													// anim_time -> time to 
 	public boolean level_select,started, clicked_ip_box, player2, player3, player4, to_start,	//started => main game started; clicked_ip_box => ipbox clicked; playerx -> human;
-			create_not_join;												// to_start ->    create_not_join -> game created
+			create_not_join,allJoined;												// to_start ->    create_not_join -> game created
 
 	String ip_text = "Your IP Goes Here";
 	final int barrier_height = 50;
@@ -66,6 +67,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 
 	@Override
 	public void start() {
+		allJoined=false;
 		started = false;
 		clicked_ip_box = false;
 		player2 = false;
@@ -388,16 +390,26 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 							break;
 				}
 			}
+			
+			
 			if (ball[0].getX() != border_right - comp_paddle.getPos())
 				comp_paddle
 						.setPos((int) (border_right - ball[0].getX() + (ball[0]
 								.getX() - border_right - comp_paddle.getPos() >= 0 ? 10
 								: -10)));
-			if (ball[0].getY() != border_bottom - comp_paddle.getPos())
-				left_paddle
-						.setPos((int) (ball[0].getY() + (ball[0].getY()
-								- border_right - left_paddle.getPos() >= 0 ? 10
-								: -10)));
+			if(!player2)
+			{
+				if (ball[0].getY() != border_bottom - comp_paddle.getPos())
+					left_paddle
+							.setPos((int) (ball[0].getY() + (ball[0].getY()
+									- border_right - left_paddle.getPos() >= 0 ? 10
+									: -10)));
+			}
+			else if(started && allJoined)
+			{
+				PlayGame.getPos(2);
+			}
+					
 			if (ball[0].getY() != border_bottom - comp_paddle.getPos())
 				right_paddle
 						.setPos((int) (border_bottom - ball[0].getY() - (ball[0]
@@ -453,6 +465,8 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 			else {
 				StartGame sg = new StartGame(UserType.JOIN, "JoiningPlayer", ip_text, 1, this);
 			}
+			allJoined=true;
+			PlayGame.startGettingData();
 //<<<<<<< HEAD
 //			if(create_not_join) {
 //				StartGame sg = new StartGame(UserType.START, "ServerPlayer", "", 0, this);
@@ -488,6 +502,8 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 			else {
 				StartGame sg = new StartGame(UserType.JOIN, "JoiningPlayer", ip_text, 1, this);
 			}
+			allJoined=true;
+			PlayGame.startGettingData();
 		} else if (to_start && create_not_join && level_select
 				&& !started
 				&& (arg0.getX() > 100 && arg0.getX() < 340 && arg0.getY() > 140 && arg0
@@ -503,6 +519,8 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 			else {
 				StartGame sg = new StartGame(UserType.JOIN, "JoiningPlayer", ip_text, 1, this);
 			}
+			allJoined=true;
+			PlayGame.startGettingData();
 		} else if (to_start && create_not_join && !level_select
 				&& !started
 				&& !(arg0.getX() > 80 && arg0.getX() < 400 && arg0.getY() > 80 && arg0
@@ -522,6 +540,8 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 			else {
 				StartGame sg = new StartGame(UserType.JOIN, "JoiningPlayer", ip_text, 1, this);
 			}
+			allJoined=true;
+			PlayGame.startGettingData();
 		} else if (!to_start
 				&& (arg0.getX() > 100 && arg0.getX() < 340 && arg0.getY() > 100 && arg0
 						.getY() < 130)) {
@@ -579,8 +599,18 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 
 	@Override
 	public void mouseMoved(MouseEvent arg0) {
+		paddle.setPos(arg0.getX());
+		
+		if(allJoined)
+		{
+			try {
+				PlayGame.sendPos(arg0.getX());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		for (int b = 0; b < n_balls; b++) {
-			paddle.setPos(arg0.getX());
 			// comp_paddle.setPos(arg0.getX());
 			// left_paddle.setPos(arg0.getX());
 			// right_paddle.setPos(arg0.getX());
