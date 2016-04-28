@@ -6,6 +6,7 @@ public class Paddle {
 	final int maxSize = 50;
 	final int minSize = 20;
 	final int maxX, height, minX;
+	int speed=0;
 	int max_speed;
 
 	Paddle(int s, int p, int x, int min_x, int h, int max_speed) {
@@ -17,6 +18,14 @@ public class Paddle {
 		minX = min_x;
 	}
 
+	public int getSpeed(){
+		return speed;
+	}
+	
+	public void setSpeed(int s){
+		speed=s;
+	}
+	
 	public int getSize() {
 		return size;
 	}

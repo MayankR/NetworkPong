@@ -388,21 +388,189 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 							break;
 				}
 			}
-			if (ball[0].getX() != border_right - comp_paddle.getPos())
-				comp_paddle
-						.setPos((int) (border_right - ball[0].getX() + (ball[0]
-								.getX() - border_right - comp_paddle.getPos() >= 0 ? 10
-								: -10)));
-			if (ball[0].getY() != border_bottom - comp_paddle.getPos())
-				left_paddle
-						.setPos((int) (ball[0].getY() + (ball[0].getY()
-								- border_right - left_paddle.getPos() >= 0 ? 10
-								: -10)));
-			if (ball[0].getY() != border_bottom - comp_paddle.getPos())
-				right_paddle
-						.setPos((int) (border_bottom - ball[0].getY() - (ball[0]
-								.getY() - border_right - right_paddle.getPos() >= 0 ? 10
-								: -10)));
+			
+			// AI logic
+			Ball bal=ball[0];
+			float ballSpeedX = bal.getSpeedX(),ballSpeedY = bal.getSpeedY();
+			
+
+			//Steps:
+				//step 1: If the ball is moving away stop paddle
+				if (ballSpeedY >= 0){
+					//comp_paddle.setPos(comp_paddle.getPos());
+					comp_paddle.setSpeed(0);
+				}
+				//step 2: calculate ball's final position on the paddle wall if its approaching
+				else{
+					//number of steps to reach top y
+					float predictX;
+					int numSteps = 0;
+					float tmpY = bal.getY();
+					while(tmpY>0){
+						tmpY += ballSpeedY; numSteps++; 
+					}
+					//predict X in infinite plane
+					predictX = (numSteps* ballSpeedX);   // distance ball travels relative to original position
+					if(predictX < 0) { 
+						predictX = -predictX;
+						predictX = (predictX % 960); 
+						if(predictX > bal.getX()){
+							predictX = predictX - bal.getX();
+							if(predictX > 480){
+								predictX = 480 - (predictX - 480);
+							}
+						}
+						else{
+							predictX = bal.getX() - predictX;
+						}
+					}else{				//dist travelled > 0 
+						predictX = predictX%960;
+						if(predictX > (480 - bal.getX())){
+							predictX = (predictX - (480 - bal.getX()));
+							if(predictX>480){
+								predictX = predictX-480;
+							}else{ predictX = 480 - predictX;}
+						}else{
+							predictX = 480 - predictX;
+						}
+					}
+					//comp_paddle.setSpeed(((480-(int)(predictX))/numSteps));
+					float finalPos = 480-(int)(predictX);
+					if(comp_paddle.getPos() > finalPos){
+						comp_paddle.setPos(comp_paddle.getPos()-1);
+					}else{
+						comp_paddle.setPos(comp_paddle.getPos()+1);
+					}
+					
+				}
+				//comp_paddle.setPos(comp_paddle.getPos()+comp_paddle.getSpeed());
+
+
+				
+				//step 1: If the ball is moving away stop paddle
+				if (ballSpeedX >= 0){
+					//comp_paddle.setPos(comp_paddle.getPos());
+					left_paddle.setSpeed(0);
+				}
+				//step 2: calculate ball's final position on the paddle wall if its approaching
+				else{
+					//number of steps to reach top y
+					float predictY=0;
+					int numSteps = 0;
+					float tmpX = bal.getX();
+					while(tmpX>0){
+						tmpX += ballSpeedX; numSteps++; 
+					}
+					//predict Y in infinite plane
+					predictY = (numSteps* ballSpeedY);   // distance ball travels relative to original position
+					if(predictY < 0) { 
+						predictY = -predictY;
+						predictY = (predictY % 960); 
+						if(predictY > bal.getY()){
+							predictY = predictY - bal.getY();
+							if(predictY > 480){
+								predictY = 480 - (predictY - 480);
+							}
+						}
+						else{
+							predictY = bal.getY() - predictY;
+						}
+					}else{				//dist travelled > 0 
+						predictY = predictY%960;
+						if(predictY > (480 - bal.getY())){
+							predictY = (predictY - (480 - bal.getY()));
+							if(predictY>480){
+								predictY = predictY-480;
+							}else{ predictY = 480 - predictY;}
+						}else{
+							predictY = 480 - predictY;
+						}
+					}
+					//comp_paddle.setSpeed(((480-(int)(predictX))/numSteps));
+					float finalPos = (int)(predictY);
+					if(left_paddle.getPos() > finalPos){
+						left_paddle.setPos(left_paddle.getPos()-1);
+					}else{
+						left_paddle.setPos(left_paddle.getPos()+1);
+					}
+					
+				}
+
+				
+
+				//step 1: If the ball is moving away stop paddle
+				if (ballSpeedX <= 0){
+					//comp_paddle.setPos(comp_paddle.getPos());
+					right_paddle.setSpeed(0);
+				}
+				//step 2: calculate ball's final position on the paddle wall if its approaching
+				else{
+					//number of steps to reach top y
+					float predictY=0;
+					int numSteps = 0;
+					float tmpX = bal.getX();
+					while(tmpX<480){
+						tmpX += ballSpeedX; numSteps++; 
+					}
+					//predict X in infinite plane
+					predictY = (numSteps* ballSpeedY);   // distance ball travels relative to original position
+					if(predictY < 0) { 
+						predictY = -predictY;
+						predictY = (predictY % 960); 
+						if(predictY > bal.getY()){
+							predictY = predictY - bal.getY();
+							if(predictY > 480){
+								predictY = 480 - (predictY - 480);
+							}
+						}
+						else{
+							predictY = bal.getY() - predictY;
+						}
+					}else{				//dist travelled > 0 
+						predictY = predictY%960;
+						if(predictY > (480 - bal.getY())){
+							predictY = (predictY - (480 - bal.getY()));
+							if(predictY>480){
+								predictY = predictY-480;
+							}else{ predictY = 480 - predictY;}
+						}else{
+							predictY = 480 - predictY;
+						}
+					}
+					//comp_paddle.setSpeed(((480-(int)(predictX))/numSteps));
+					float finalPos = 480 - (int)(predictY);
+					if(right_paddle.getPos() > finalPos){
+						right_paddle.setPos(right_paddle.getPos()-1);
+					}else{
+						right_paddle.setPos(right_paddle.getPos()+1);
+					}
+					
+				}
+
+				
+				
+				
+			//comp_paddle.setPos(10);
+//			if (ball[0].getX() != border_right - comp_paddle.getPos())
+//				comp_paddle
+//						.setPos((int) (border_right - ball[0].getX() + (ball[0]
+//								.getX() - border_right - comp_paddle.getPos() >= 0 ? 10
+//								: -10)));
+				
+//			if (ball[0].getY() != border_bottom - comp_paddle.getPos())
+//				left_paddle
+//						.setPos((int) (ball[0].getY() + (ball[0].getY()
+//								- border_right - left_paddle.getPos() >= 0 ? 10
+//								: -10)));
+				
+				
+//			if (ball[0].getY() != border_bottom - comp_paddle.getPos())
+//				right_paddle
+//						.setPos((int) (border_bottom - ball[0].getY() - (ball[0]
+//								.getY() - border_right - right_paddle.getPos() >= 0 ? 10
+//								: -10)));
+				
+				
 			t2 = System.currentTimeMillis();
 			t3 += t2 - t1;
 			if (t3 <= anim_time) {
