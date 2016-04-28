@@ -206,7 +206,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 		{
 			paint(second);
 			Image arr[]={Paddle};
-			System.out.println("FfefwefPPPP" + level);
+			//System.out.println("FfefwefPPPP" + level);
 			switch(level)
 			{
 				case 0	:	new Level0().display(second,arr);
@@ -373,7 +373,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 				ball[b].update();
 				// System.out.println(b + " " + ball[b].getX() + " " +
 				// ball[b].getY());
-				System.out.println("Ffefwef" + level);
+			//	System.out.println("Ffefwef" + level);
 				switch(level)
 				{
 					case 0	:	new Level0().reflect(ball[b]);
@@ -401,7 +401,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 								: -10)));
 			t2 = System.currentTimeMillis();
 			t3 += t2 - t1;
-			System.out.println(t3);
+			//System.out.println(t3);
 			if (t3 <= anim_time) {
 				flag = true;
 				t4 = t3;
