@@ -12,7 +12,7 @@ public class PlayGame {
 	public static void sendPos(int pos) throws Exception {
 		DatagramSocket clientSocket = new DatagramSocket();
 		byte[] sendData = new byte[1024];
-	    System.out.println("Broadcasting my position");
+//	    System.out.println("Broadcasting my position");
 		String sentence = myNum + ";" + pos + ";";
 		sendData = sentence.getBytes();
 	    
@@ -22,7 +22,7 @@ public class PlayGame {
 			
 			InetAddress IPAddress = InetAddress.getByName(IP[i]);
 			
-			System.out.println("Sending to: " + i + " at IP: " + IP[i]);
+//			System.out.println("Sending to: " + i + " at IP: " + IP[i]);
 			
 			DatagramPacket sendPacket = 
 					new DatagramPacket(sendData, sendData.length, IPAddress, playGamePort);
@@ -39,13 +39,13 @@ public class PlayGame {
 	public static int getPos(int playerNum) {
 		int serverNum = (playerNum + myNum - 1);
 		if(serverNum > 4) serverNum -= 4;
-		System.out.println("Sending back requested pos of player " + playerNum);
+//		System.out.println("Sending back requested pos of player " + playerNum);
 		return posArray[serverNum - 1];
 	}
 	
 	public static void startGettingData() {
 		ServerThread st = new ServerThread();
-		System.out.println("Starting server thread to get data");
+//		System.out.println("Starting server thread to get data");
 		st.start();
 	}
 }

@@ -401,7 +401,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 			}
 			else if(started && allJoined)
 			{
-				PlayGame.getPos(3);
+				comp_paddle.setPos(PlayGame.getPos(3));
 			}
 			if(!player2)
 			{
@@ -413,7 +413,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 			}
 			else if(started && allJoined)
 			{
-				PlayGame.getPos(2);
+				left_paddle.setPos(PlayGame.getPos(2));
 			}
 			if(!player4)
 			{
@@ -425,7 +425,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 			}
 			else if(started && allJoined)
 			{
-				PlayGame.getPos(4);
+				right_paddle.setPos(PlayGame.getPos(4));
 			}
 			
 			t2 = System.currentTimeMillis();
@@ -565,7 +565,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		if (started && ball[0].isOnPaddle())
+		if (started && ball[0].isOnPaddle() && playerNum==1)
 		{
 			for (int b = 0; b < n_balls; b++) {
 				if (ball[b].isOnPaddle()) {
