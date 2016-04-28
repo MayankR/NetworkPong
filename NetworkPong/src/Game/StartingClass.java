@@ -548,7 +548,6 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 			create_not_join = false;
 //>>>>>>> e86341ba76ccc745f270028097fc7df9606a61c1
 		}
-
 	}
 
 	@Override
@@ -612,9 +611,22 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 			// left_paddle.setPos(arg0.getX());
 			// right_paddle.setPos(arg0.getX());
 			if (ball[b].isOnPaddle())
-				ball[b].setX(paddle.getPos()
-						+ (2 * paddle.getSize() * (2 * b - n_balls))
-						/ (5 * n_balls));
+			{
+				switch(playerNum)
+				{
+					case 1 : ball[b].setX(paddle.getPos() + (2 * paddle.getSize() * (2 * b - n_balls))/ (5 * n_balls));
+							break;
+							
+					case 2 : ball[b].setX(right_paddle.getPos() + (2 * right_paddle.getSize() * (2 * b - n_balls))/ (5 * n_balls));
+							break;
+								
+					case 3 : ball[b].setX(comp_paddle.getPos() + (2 * comp_paddle.getSize() * (2 * b - n_balls))/ (5 * n_balls));
+							break;
+								
+					case 4 : ball[b].setX(left_paddle.getPos() + (2 * left_paddle.getSize() * (2 * b - n_balls))/ (5 * n_balls));
+								break;		
+				}
+			}
 		}
 	}
 
