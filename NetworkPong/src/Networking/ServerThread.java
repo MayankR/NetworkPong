@@ -20,6 +20,10 @@ public class ServerThread extends Thread {
 	        	String data = new String( receivePacket.getData());
 //	        	System.out.println("RECEIVED: " + data);
 	        	
+	        	if(data.charAt(0) == 'g') {
+	        		
+	        	}
+	        	
 	        	int playerNum = Integer.parseInt("" + data.charAt(0));
 	        	int i = 2;
 	        	String playerPosString = "";
