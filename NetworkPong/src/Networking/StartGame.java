@@ -15,6 +15,7 @@ public class StartGame {
 	int playerCount = 0;
 	StartingClass mGame = null;
 	boolean[] human = {true, false, false, false};
+	static int totalJoined = 0;
 	
 	public StartGame(UserType type, String userName, String ip1, int numPlayers, StartingClass game) {
 		this.type = type;
@@ -28,6 +29,7 @@ public class StartGame {
 			try {
 				playerCount = numPlayers;
 				connectUsers(startGamePort, userName, numPlayers);
+				totalJoined++;
 			}
 			catch(Exception e) {
 				e.printStackTrace();
@@ -38,6 +40,7 @@ public class StartGame {
 			IP[0] = ip1;
 			PlayGame.IP[0] = ip1;
 			startJoining(ip1, startGamePort, userName);
+			totalJoined++;
 		}
 	}
 	
@@ -94,16 +97,17 @@ public class StartGame {
         	PlayGame.IP[cur] = IP[cur];
         	
         	System.out.println("Joining PLayer IP stored: " + IP[cur] + " at index " + cur);
-
         	cur++;
 
             byte[] sendData = new byte[1024];
         	//Send own user name, player IP and total player count to Player
-        	String data = userName + ";" + IPAddressPlayer + ";" + numPlayers + ";" + (cur);
+        	String data = userName + ";" + IPAddressPlayer + ";" + numPlayers + ";" + (cur) + ";" + mGame.level;
         	sendData = data.getBytes();
         	DatagramPacket sendPacket =
         			new DatagramPacket(sendData, sendData.length, IPAddressPlayer, port);
         	serverSocket.send(sendPacket);
+
+			totalJoined++;
         }
         System.out.println("Joined all players once");
         
@@ -165,7 +169,7 @@ public class StartGame {
 		String serverData = new String(receivePacket.getData());
 		System.out.println("Data from server is " + serverData);
 		
-		String serverName = "", serverIP = "", totPlayers = "", myNum = "";
+		String serverName = "", serverIP = "", totPlayers = "", myNum = "", myLevel = "";
 		int i=0;
 		while(serverData.charAt(i) != ';') {
 			serverName = serverName + serverData.charAt(i); 
@@ -183,7 +187,9 @@ public class StartGame {
 		}
 		i++;
 		myNum = "" + serverData.charAt(i);
+		myLevel = "" + serverData.charAt(i + 2);
 		playerCount = Integer.parseInt(totPlayers);
+		mGame.level = Integer.parseInt(myLevel);
 		System.out.println("Player count: " + playerCount);
 		System.out.println("My player number: " + myNum);
 		

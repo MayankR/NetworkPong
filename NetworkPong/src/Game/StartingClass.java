@@ -35,7 +35,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 	String ip_text = "Your IP Goes Here";
 	final int barrier_height = 50;
 
-	int level=1;
+	public int level=1;
 	
 	final int border_top = 0, border_bottom = 480, border_left = 0,
 			border_right = 480;

@@ -6,7 +6,7 @@ public class PlayGame {
 	public static String[] IP = {"", "", "", ""};
 	public static boolean[] human = {true, false, false, false};
 	public static int myNum = 1;
-	static int playGamePort = 9876;
+	static int playGamePort = 9879;
 	static int[] posArray = {0, 0, 0, 0};
 	
 	public static void sendPos(int pos) throws Exception {
