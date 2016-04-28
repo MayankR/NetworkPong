@@ -468,7 +468,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 						predictY = (predictY % 960); 
 						if(predictY > bal.getY()){
 							predictY = predictY - bal.getY();
-							if(predictY > 480){
+							if(predictY > 480) {
 								predictY = 480 - (predictY - 480);
 							}
 						}
