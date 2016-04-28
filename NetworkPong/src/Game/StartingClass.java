@@ -571,12 +571,15 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		for (int b = 0; b < n_balls; b++) {
-			if (ball[b].isOnPaddle()) {
-				ball[b].setSpeedY(-2.5f);
-				ball[b].setSpeedX((ball[b].getX() - paddle.getPos())
-						/ ((float) paddle.getSize()) * 2);
-				ball[b].setOnPaddle(false);
+		if (started && ball[0].isOnPaddle())
+		{
+			for (int b = 0; b < n_balls; b++) {
+				if (ball[b].isOnPaddle()) {
+					ball[b].setSpeedY(-2.5f);
+					ball[b].setSpeedX((ball[b].getX() - paddle.getPos())
+							/ ((float) paddle.getSize()) * 2);
+					ball[b].setOnPaddle(false);
+				}
 			}
 		}
 	}
