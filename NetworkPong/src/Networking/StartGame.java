@@ -11,9 +11,11 @@ public class StartGame {
 	int startGamePort = 9876;
 	String myIP;
 	String[] IP = {"", "", "", ""};
+	int[] playerPorts = {0, 0, 0, 0};
 	int playerCount = 0;
 	StartingClass mGame = null;
 	boolean[] human = {true, false, false, false};
+	static int totalJoined = 0;
 	
 	public StartGame(UserType type, String userName, String ip1, int numPlayers, StartingClass game) {
 		this.type = type;
@@ -27,6 +29,7 @@ public class StartGame {
 			try {
 				playerCount = numPlayers;
 				connectUsers(startGamePort, userName, numPlayers);
+				totalJoined++;
 			}
 			catch(Exception e) {
 				e.printStackTrace();
@@ -37,6 +40,7 @@ public class StartGame {
 			IP[0] = ip1;
 			PlayGame.IP[0] = ip1;
 			startJoining(ip1, startGamePort, userName);
+			totalJoined++;
 		}
 	}
 	
@@ -60,8 +64,10 @@ public class StartGame {
 			ip = ip + data.charAt(i);
 			i++;
 		}
-		System.out.println("Setting server IP as: " + ip);
-		myIP = ip;
+		System.out.println("Setting server IP as: " + uName);
+		myIP = uName;
+		IP[0] = uName;
+		PlayGame.IP[0] = uName;
 	}
 	
 	private void connectUsers(int myPort, String userName, int numPlayers) throws Exception {
@@ -88,17 +94,21 @@ public class StartGame {
         	while(!human[cur]) { cur++; }
         	IP[cur] = IPAddressPlayer.toString();
         	IP[cur] = IP[cur].substring(1, IP[cur].length());
+        	playerPorts[cur] = port;
         	PlayGame.IP[cur] = IP[cur];
         	
-        	System.out.println("Joining PLayer IP stored: " + IP[cur]);
+        	System.out.println("Joining PLayer IP stored: " + IP[cur] + " at index " + (cur + 1));
+        	cur++;
 
             byte[] sendData = new byte[1024];
         	//Send own user name, player IP and total player count to Player
-        	String data = userName + ";" + IPAddressPlayer + ";" + numPlayers + ";" + (cur + 1);
+        	String data = userName + ";" + IPAddressPlayer + ";" + numPlayers + ";" + (cur) + ";" + mGame.level;
         	sendData = data.getBytes();
         	DatagramPacket sendPacket =
         			new DatagramPacket(sendData, sendData.length, IPAddressPlayer, port);
         	serverSocket.send(sendPacket);
+
+			totalJoined++;
         }
         System.out.println("Joined all players once");
         
@@ -107,7 +117,9 @@ public class StartGame {
         for(int i=0;i<=3;i++) {
         	allIP = allIP + IP[i] + ";";
         }
-        System.out.println("Made string of all IP");
+        System.out.println("Made string of all IP: " + allIP);
+        long ttt = System.currentTimeMillis();
+        while(System.currentTimeMillis() - ttt < 4000);
 
         //Send all IP to All players
         for(int i=1;i<=3;i++) {
@@ -116,9 +128,9 @@ public class StartGame {
         	sendDataIP = allIP.getBytes();
         	System.out.println("Set IP data to send");
         	InetAddress playerIP = InetAddress.getByName(IP[i]);
-        	System.out.println("made InetAddress");
+        	System.out.println("made InetAddress: " + playerIP.toString() + " at port " + playerPorts[i]);
         	DatagramPacket sendPacket =
-        			new DatagramPacket(sendDataIP, sendDataIP.length, playerIP, startGamePort);
+        			new DatagramPacket(sendDataIP, sendDataIP.length, playerIP, playerPorts[i]);
         	System.out.println("Made packet");
         	serverSocket.send(sendPacket);
         	System.out.println("Packet Sent");
@@ -142,6 +154,7 @@ public class StartGame {
 	private void connectToIP(String ip, int port, String data) throws Exception {
 //		BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
 		DatagramSocket clientSocket = new DatagramSocket();
+		
 		InetAddress IPAddress = InetAddress.getByName(ip);
 		
 		//Send my data to server IP
@@ -157,7 +170,7 @@ public class StartGame {
 		String serverData = new String(receivePacket.getData());
 		System.out.println("Data from server is " + serverData);
 		
-		String serverName = "", serverIP = "", totPlayers = "", myNum = "";
+		String serverName = "", serverIP = "", totPlayers = "", myNum = "", myLevel = "";
 		int i=0;
 		while(serverData.charAt(i) != ';') {
 			serverName = serverName + serverData.charAt(i); 
@@ -174,20 +187,16 @@ public class StartGame {
 			i++;
 		}
 		i++;
-//		while(i < serverData.length()) {
-//			myNum = myNum + serverData.charAt(i); 
-//			i++;
-//		}
 		myNum = "" + serverData.charAt(i);
+		myLevel = "" + serverData.charAt(i + 2);
 		playerCount = Integer.parseInt(totPlayers);
+		mGame.level = Integer.parseInt(myLevel);
 		System.out.println("Player count: " + playerCount);
 		System.out.println("My player number: " + myNum);
-		mGame.playerNum = Integer.parseInt(myNum);
-		System.out.println("My player number: " + myNum);
 		
+		mGame.playerNum = Integer.parseInt(myNum);
 		PlayGame.myNum = mGame.playerNum;
 		
-
 		byte[] receivePlayersData = new byte[1024];
 		
 		//Receive all IP
@@ -209,6 +218,7 @@ public class StartGame {
 			PlayGame.IP[indexIP] = curIP;
 			curIP = "";
 			indexIP++;
+			if(indexIP == 4) break;
 		}
 		if(!IP[(1 + mGame.playerNum - 1)%4].equals("")) { mGame.player2 = true; }
 		if(!IP[(2 + mGame.playerNum - 1)%4].equals("")) { mGame.player3 = true; }
