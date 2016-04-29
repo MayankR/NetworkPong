@@ -22,7 +22,7 @@ public class ServerThread extends Thread {
 	        	
 	        	if(data.charAt(0) == 'g') {
 	        		PlayGame.scc.hostMousePressed();
-		        	continue;
+	        		continue;
 	        	}
 	        	
 	        	int playerNum = Integer.parseInt("" + data.charAt(0));
