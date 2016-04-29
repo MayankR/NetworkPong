@@ -254,11 +254,11 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 				paddle_size = paddle.getSize();
 
 				// setOnPaddle() calls
-				if (ball[b].getSpeedX() == 0 && ball[b].getSpeedY() == 0
-						&& y + radius + paddle.height >= border_bottom)
-					ball[b].setOnPaddle(true);
-				else
-					ball[b].setOnPaddle(false);
+//				if (ball[b].getSpeedX() == 0 && ball[b].getSpeedY() == 0
+//						&& y + radius + paddle.height >= border_bottom)
+//					ball[b].setOnPaddle(true);
+//				else
+//					ball[b].setOnPaddle(false);
 
 				// paddle reflections
 				if (y + paddle.height + radius >= border_bottom
@@ -389,8 +389,33 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 					case 2	:	new Level2().reflect(ball[b]);
 							break;
 				}
+
+//				System.out.println("FWEFF+_+_+" + ball[b].isOnPaddle()+"   "+ball[b].getSpeedX()+"  "+ball[b].getSpeedY()+" "+(ball[b].getSpeedX()==0));
+				if (ball[b].isOnPaddle())
+				{
+//					ball[b].setOnPaddle(false);
+					switch(playerNum)
+					{
+						case 1 :	ball[b].setX(paddle.getPos() + (2 * paddle.height * (2 * b - n_balls))/ (5 * n_balls));
+									ball[b].setY(border_bottom-paddle.height-ball[b].getSize());
+								break;
+								
+						case 2 :	ball[b].setY(border_bottom-(right_paddle.getPos() + (2 * right_paddle.height * (2 * b - n_balls))/ (5 * n_balls)));
+									ball[b].setX(border_right-right_paddle.height-ball[b].getSize());
+								break;
+									
+						case 3 :	ball[b].setX(border_right-(comp_paddle.getPos() + (2 * comp_paddle.height * (2 * b - n_balls))/ (5 * n_balls)));
+									ball[b].setY(comp_paddle.height+ball[b].getSize());
+								break;
+									
+						case 4 : 	ball[b].setY(left_paddle.getPos() + (2 * left_paddle.height * (2 * b - n_balls))/ (5 * n_balls));
+									ball[b].setX(left_paddle.height+ball[b].getSize());
+									break;		
+					}
+					System.out.println("FEWFWEFWEf___ "+playerNum+"   "+ball[b].getX()+"  "+ball[b].getY());
+				}
+//				System.out.println("GEGEGEGER+++++");
 			}
-			
 			if(!player3)
 			{
 				if (ball[0].getX() != border_right - comp_paddle.getPos())
@@ -546,7 +571,6 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 						.getY() < 170)) {
 			to_start = true;
 			create_not_join = false;
-//>>>>>>> e86341ba76ccc745f270028097fc7df9606a61c1
 		}
 	}
 
@@ -584,14 +608,10 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 	}
 	
 	public void hostMousePressed() {
-		if (started && ball[0].isOnPaddle() && playerNum==1)
+		if (started && ball[0].isOnPaddle())
 		{
-			try {
-				PlayGame.triggerStart();
-			}
-			catch(Exception e) {
-				e.printStackTrace();
-			}
+//			System.out.println(System.currentTimeMillis());
+			
 			for (int b = 0; b < n_balls; b++) {
 				if (ball[b].isOnPaddle()) {
 					ball[b].setOnPaddle(false);
@@ -636,13 +656,13 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
-		paddle.setPos(arg0.getX());
-		for (int b = 0; b < n_balls; b++) {
-			if (ball[b].isOnPaddle())
-				ball[b].setX(paddle.getPos()
-						+ (2 * paddle.getSize() * (2 * b - n_balls))
-						/ (5 * n_balls));
-		}
+//		paddle.setPos(arg0.getX());
+//		for (int b = 0; b < n_balls; b++) {
+//			if (ball[b].isOnPaddle())
+//				ball[b].setX(paddle.getPos()
+//						+ (2 * paddle.getSize() * (2 * b - n_balls))
+//						/ (5 * n_balls));
+//		}
 	}
 
 	@Override
@@ -656,28 +676,6 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-		}
-		for (int b = 0; b < n_balls; b++) {
-			// comp_paddle.setPos(arg0.getX());
-			// left_paddle.setPos(arg0.getX());
-			// right_paddle.setPos(arg0.getX());
-			if (ball[b].isOnPaddle())
-			{
-				switch(playerNum)
-				{
-					case 1 : ball[b].setX(paddle.getPos() + (2 * paddle.getSize() * (2 * b - n_balls))/ (5 * n_balls));
-							break;
-							
-					case 2 : ball[b].setX(right_paddle.getPos() + (2 * right_paddle.getSize() * (2 * b - n_balls))/ (5 * n_balls));
-							break;
-								
-					case 3 : ball[b].setX(comp_paddle.getPos() + (2 * comp_paddle.getSize() * (2 * b - n_balls))/ (5 * n_balls));
-							break;
-								
-					case 4 : ball[b].setX(left_paddle.getPos() + (2 * left_paddle.getSize() * (2 * b - n_balls))/ (5 * n_balls));
-								break;		
-				}
 			}
 		}
 	}
