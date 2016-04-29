@@ -1,9 +1,8 @@
 package Game;
 
-import java.applet.Applet;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
@@ -11,14 +10,17 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.net.URL;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.*;
 
 import Networking.PlayGame;
 import Networking.StartGame;
 import Networking.UserType;
 
 @SuppressWarnings("serial")
-public class StartingClass extends Applet implements Runnable, MouseListener,
+public class StartingClass extends JPanel implements Runnable, MouseListener,
 		MouseMotionListener, KeyListener {
 
 	Paddle paddle, comp_paddle, left_paddle, right_paddle; // the four paddles
@@ -30,7 +32,6 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 	private Image Ball, Paddle, image, Life; // ball -> ball image; paddle ->
 												// paddle image; image TODO
 												// (donno)
-	private URL base;
 	private Graphics second;
 	int paddle_life, comp_life, left_life, right_life; // paddle lives for the
 														// four paddles
@@ -52,8 +53,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 
 	long t_old;
 
-	@Override
-	public void init() {
+	public StartingClass() {
 		paddle_life = init_life;
 		comp_life = init_life;
 		left_life = init_life;
@@ -64,18 +64,27 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 		setSize(border_right + 200, border_bottom);
 		setBackground(Color.BLACK);
 		setFocusable(true);
-		Frame frame = (Frame) this.getParent().getParent();
-		frame.setTitle("Network Pong");
+//		Frame frame = (Frame) this.getParent().getParent();
+//		frame.setTitle("Network Pong");
+//		try {
+//			base = getDocumentBase();
+//		} catch (Exception e) {
+//		}
+		BufferedImage i1=null,i2=null,i3=null;
 		try {
-			base = getDocumentBase();
-		} catch (Exception e) {
+			i1=ImageIO.read(getClass().getClassLoader().getResource("Data/Paddle.png"));
+			i2=ImageIO.read(getClass().getClassLoader().getResource("Data/Ball.png"));
+			i3=ImageIO.read(getClass().getClassLoader().getResource("Data/Life.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		Ball = getImage(base, "Data/Ball.png");
-		Paddle = getImage(base, "Data/Paddle.png");
-		Life = getImage(base, "Data/Life.png");
+		
+		Ball = i2;
+		Paddle = i1;
+		Life = i3;
 	}
 
-	@Override
 	public void start() {
 		allJoined = false;
 		started = false;
@@ -118,8 +127,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 		thread.start();
 	}
 
-	@Override
-	public void paint(Graphics g) {
+	public void paint1(Graphics g) {
 		System.out.println("EGERGEG#### "
 				+ (System.currentTimeMillis() - t_old));
 		t_old = System.currentTimeMillis();
@@ -261,7 +269,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 	}
 
 	@Override
-	public void update(Graphics g) {
+	public void paintComponent(Graphics g) {
 		if (image == null) {
 			image = createImage(this.getWidth(), this.getHeight());
 			second = image.getGraphics();
@@ -272,7 +280,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 		second.setColor(getForeground());
 
 		if (started) {
-			paint(second);
+			paint1(second);
 			Image arr[] = { Paddle };
 			// System.out.println("FfefwefPPPP" + level);
 			switch (level) {
@@ -990,4 +998,17 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 	@Override
 	public void keyTyped(KeyEvent arg0) {
 	}
+
+	public static void main(String args[])
+	{
+		StartingClass sc = new StartingClass();
+		sc.start();
+		JFrame jf = new JFrame();
+		Container c =jf.getContentPane();
+		c.add(sc);
+			jf.setBounds(0,0,700,520);
+		jf.setVisible(true);
+		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+
 }

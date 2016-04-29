@@ -14,7 +14,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.net.URL;
 
-public class OpeningScreen extends Applet {
+public class OpeningScreen{
 	
 	private URL base;
 	Image ball,b1;
@@ -26,19 +26,19 @@ public class OpeningScreen extends Applet {
 		player3=pl3;
 		player4=pl4;
 		ip_dat=x;
-		try {
-			this.base = base;
-		} catch (Exception e) {
-		}
-		Toolkit t=Toolkit.getDefaultToolkit();  
-        ball=t.getImage("/Data/Ball.png");
+//		try {
+//			this.base = base;
+//		} catch (Exception e) {
+//		}
+//		Toolkit t=Toolkit.getDefaultToolkit();  
+//        ball=t.getImage("/Data/Ball.png");
 //		ball = getImage(base, "Data/Ball.png");
         b1=i1;
 	}
 			
 	public void paint(Graphics g) {
-		g.drawImage(b1, 100, 100, 240, 30, this);
-		g.drawImage(b1, 180, 300, 100, 30, this);
+		g.drawImage(b1, 100, 100, 240, 30, null);
+		g.drawImage(b1, 180, 300, 100, 30, null);
 //		g.drawImage(b1, 100, 140, 240, 30, this);
 //		g.drawImage(b1, 100, 180, 240, 30, this);
 //		g.drawImage(b1, 100, 220, 240, 30, this);

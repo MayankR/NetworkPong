@@ -1,18 +1,16 @@
 package Game;
 
-import java.applet.Applet;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 
-public class Level2 extends Applet implements Level{
+public class Level2 implements Level{
 
 	public void display(Graphics g, Image i1[])
 	{
 		//g.setColor(Color.RED);
 		//g.fillRect(300, 300, 100, 100);
-		g.drawImage(i1[0], 220, 190, 40, 100, this);
-		g.drawImage(i1[0], 190, 220, 100, 40, this);
+		g.drawImage(i1[0], 220, 190, 40, 100, null);
+		g.drawImage(i1[0], 190, 220, 100, 40, null);
 	}
 	
 	public void reflect(Ball ball)
