@@ -566,6 +566,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 	public void mousePressed(MouseEvent arg0) {
 		if (started && ball[0].isOnPaddle() && playerNum==1)
 		{
+			System.out.println(System.currentTimeMillis());
 			try {
 				PlayGame.triggerStart();
 			}
@@ -586,12 +587,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 	public void hostMousePressed() {
 		if (started && ball[0].isOnPaddle() && playerNum==1)
 		{
-			try {
-				PlayGame.triggerStart();
-			}
-			catch(Exception e) {
-				e.printStackTrace();
-			}
+			
 			for (int b = 0; b < n_balls; b++) {
 				if (ball[b].isOnPaddle()) {
 					ball[b].setOnPaddle(false);
