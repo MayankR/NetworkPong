@@ -21,35 +21,43 @@ import Networking.UserType;
 public class StartingClass extends Applet implements Runnable, MouseListener,
 		MouseMotionListener, KeyListener {
 
-	Paddle paddle, comp_paddle, left_paddle, right_paddle;				//the four paddles in the game
-	int n_balls = 1;													// number of balls in the game
-	public int init_life=10;												// number of lives for each player in the beginning
-	Ball ball[] = new Ball[n_balls];									//ball objects for the n balls
-	private Image Ball, Paddle, image, Life;									//ball -> ball image; paddle -> paddle image; image TODO (donno)
-	private URL base;													
-	private Graphics second;											
-	int paddle_life, comp_life, left_life, right_life;					// paddle lives for the four paddles
-	int anim_time = 5;													// anim_time -> time to 
-	public boolean level_select,started, clicked_ip_box, player2, player3, player4, to_start,	//started => main game started; clicked_ip_box => ipbox clicked; playerx -> human;
-			create_not_join,allJoined;												// to_start ->    create_not_join -> game created
+	Paddle paddle, comp_paddle, left_paddle, right_paddle; // the four paddles
+															// in the game
+	int n_balls = 1; // number of balls in the game
+	public int init_life = 10; // number of lives for each player in the
+								// beginning
+	Ball ball[] = new Ball[n_balls]; // ball objects for the n balls
+	private Image Ball, Paddle, image, Life; // ball -> ball image; paddle ->
+												// paddle image; image TODO
+												// (donno)
+	private URL base;
+	private Graphics second;
+	int paddle_life, comp_life, left_life, right_life; // paddle lives for the
+														// four paddles
+	int anim_time = 5; // anim_time -> time to
+	public boolean level_select, started, clicked_ip_box, player2, player3,
+			player4, to_start, // started => main game started; clicked_ip_box
+								// => ipbox clicked; playerx -> human;
+			create_not_join, allJoined; // to_start -> create_not_join -> game
+										// created
 
 	String ip_text = "Your IP Goes Here";
 	final int barrier_height = 50;
 
-	public int level=1;
-	
+	public int level = 1;
+
 	final int border_top = 0, border_bottom = 480, border_left = 0,
 			border_right = 480;
 	public int playerNum = 1;
-	
+
 	long t_old;
 
 	@Override
 	public void init() {
-		paddle_life=init_life;
-		comp_life=init_life;
-		left_life=init_life;
-		right_life=init_life;
+		paddle_life = init_life;
+		comp_life = init_life;
+		left_life = init_life;
+		right_life = init_life;
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		addKeyListener(this);
@@ -69,7 +77,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 
 	@Override
 	public void start() {
-		allJoined=false;
+		allJoined = false;
 		started = false;
 		clicked_ip_box = false;
 		player2 = false;
@@ -112,30 +120,33 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 
 	@Override
 	public void paint(Graphics g) {
-		System.out.println("EGERGEG#### "+(System.currentTimeMillis()-t_old));
-		t_old=System.currentTimeMillis();
+		System.out.println("EGERGEG#### "
+				+ (System.currentTimeMillis() - t_old));
+		t_old = System.currentTimeMillis();
 		for (int i = 0; i < n_balls; i++)
 			g.drawImage(Ball, (int) ball[i].getX() - ball[i].getSize(),
 					(int) ball[i].getY() - ball[i].getSize(),
 					2 * ball[i].getSize(), 2 * ball[i].getSize(), this);
-		
-		if(paddle_life>0)
+
+		if (paddle_life > 0)
 			g.drawImage(Paddle, paddle.getPos() - paddle.getSize() / 2,
-					border_bottom - paddle.height, paddle.getSize(), paddle.height,
-					this);
-		if(comp_life>0)
-		g.drawImage(
-				Paddle,
-				border_right - comp_paddle.getPos() - comp_paddle.getSize() / 2,
-				border_top, comp_paddle.getSize(), comp_paddle.height, this);
-		if(left_life>0)
-		g.drawImage(Paddle, border_left,
-				left_paddle.getPos() - left_paddle.getSize() / 2,
-				left_paddle.height, left_paddle.getSize(), this);
-		if(right_life>0)
-		g.drawImage(Paddle, border_right - right_paddle.height, border_bottom
-				- right_paddle.getPos() - right_paddle.getSize() / 2,
-				right_paddle.height, right_paddle.getSize(), this);
+					border_bottom - paddle.height, paddle.getSize(),
+					paddle.height, this);
+		if (comp_life > 0)
+			g.drawImage(Paddle, border_right - comp_paddle.getPos()
+					- comp_paddle.getSize() / 2, border_top,
+					comp_paddle.getSize(), comp_paddle.height, this);
+		if (left_life > 0)
+			g.drawImage(Paddle, border_left,
+					left_paddle.getPos() - left_paddle.getSize() / 2,
+					left_paddle.height, left_paddle.getSize(), this);
+		if (right_life > 0)
+			g.drawImage(
+					Paddle,
+					border_right - right_paddle.height,
+					border_bottom - right_paddle.getPos()
+							- right_paddle.getSize() / 2, right_paddle.height,
+					right_paddle.getSize(), this);
 		// barriers
 		g.drawImage(Paddle, border_left, border_top, barrier_height,
 				barrier_height, this);
@@ -147,58 +158,105 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 				- barrier_height, barrier_height, barrier_height, this);
 		g.setColor(Color.WHITE);
 		g.setFont(new Font("TimesRoman", Font.BOLD, 20));
-		g.drawString(paddle_life+"\n"+comp_life+"\n"+left_life+"\n"+right_life, 500, 100);
-		switch(paddle_life)
-		{
-			case 10	:	g.drawImage(Life,border_right+5,border_top+40,15,15,this);
-			case 9	:	g.drawImage(Life,border_right+25,border_top+40,15,15,this);
-			case 8	:	g.drawImage(Life,border_right+45,border_top+40,15,15,this);
-			case 7	:	g.drawImage(Life,border_right+65,border_top+40,15,15,this);
-			case 6	:	g.drawImage(Life,border_right+85,border_top+40,15,15,this);
-			case 5	:	g.drawImage(Life,border_right+105,border_top+40,15,15,this);
-			case 4	:	g.drawImage(Life,border_right+125,border_top+40,15,15,this);
-			case 3	:	g.drawImage(Life,border_right+145,border_top+40,15,15,this);
-			case 2	:	g.drawImage(Life,border_right+165,border_top+40,15,15,this);
-			case 1	:	g.drawImage(Life,border_right+185,border_top+40,15,15,this);
+		g.drawString(paddle_life + "\n" + comp_life + "\n" + left_life + "\n"
+				+ right_life, 500, 100);
+		switch (paddle_life) {
+		case 10:
+			g.drawImage(Life, border_right + 5, border_top + 40, 15, 15, this);
+		case 9:
+			g.drawImage(Life, border_right + 25, border_top + 40, 15, 15, this);
+		case 8:
+			g.drawImage(Life, border_right + 45, border_top + 40, 15, 15, this);
+		case 7:
+			g.drawImage(Life, border_right + 65, border_top + 40, 15, 15, this);
+		case 6:
+			g.drawImage(Life, border_right + 85, border_top + 40, 15, 15, this);
+		case 5:
+			g.drawImage(Life, border_right + 105, border_top + 40, 15, 15, this);
+		case 4:
+			g.drawImage(Life, border_right + 125, border_top + 40, 15, 15, this);
+		case 3:
+			g.drawImage(Life, border_right + 145, border_top + 40, 15, 15, this);
+		case 2:
+			g.drawImage(Life, border_right + 165, border_top + 40, 15, 15, this);
+		case 1:
+			g.drawImage(Life, border_right + 185, border_top + 40, 15, 15, this);
 		}
-		switch(left_life)
-		{
-			case 10	:	g.drawImage(Life,border_right+5,border_top+80,15,15,this);
-			case 9	:	g.drawImage(Life,border_right+25,border_top+80,15,15,this);
-			case 8	:	g.drawImage(Life,border_right+45,border_top+80,15,15,this);
-			case 7	:	g.drawImage(Life,border_right+65,border_top+80,15,15,this);
-			case 6	:	g.drawImage(Life,border_right+85,border_top+80,15,15,this);
-			case 5	:	g.drawImage(Life,border_right+105,border_top+80,15,15,this);
-			case 4	:	g.drawImage(Life,border_right+125,border_top+80,15,15,this);
-			case 3	:	g.drawImage(Life,border_right+145,border_top+80,15,15,this);
-			case 2	:	g.drawImage(Life,border_right+165,border_top+80,15,15,this);
-			case 1	:	g.drawImage(Life,border_right+185,border_top+80,15,15,this);
+		switch (left_life) {
+		case 10:
+			g.drawImage(Life, border_right + 5, border_top + 80, 15, 15, this);
+		case 9:
+			g.drawImage(Life, border_right + 25, border_top + 80, 15, 15, this);
+		case 8:
+			g.drawImage(Life, border_right + 45, border_top + 80, 15, 15, this);
+		case 7:
+			g.drawImage(Life, border_right + 65, border_top + 80, 15, 15, this);
+		case 6:
+			g.drawImage(Life, border_right + 85, border_top + 80, 15, 15, this);
+		case 5:
+			g.drawImage(Life, border_right + 105, border_top + 80, 15, 15, this);
+		case 4:
+			g.drawImage(Life, border_right + 125, border_top + 80, 15, 15, this);
+		case 3:
+			g.drawImage(Life, border_right + 145, border_top + 80, 15, 15, this);
+		case 2:
+			g.drawImage(Life, border_right + 165, border_top + 80, 15, 15, this);
+		case 1:
+			g.drawImage(Life, border_right + 185, border_top + 80, 15, 15, this);
 		}
-		switch(comp_life)
-		{
-			case 10	:	g.drawImage(Life,border_right+5,border_top+120,15,15,this);
-			case 9	:	g.drawImage(Life,border_right+25,border_top+120,15,15,this);
-			case 8	:	g.drawImage(Life,border_right+45,border_top+120,15,15,this);
-			case 7	:	g.drawImage(Life,border_right+65,border_top+120,15,15,this);
-			case 6	:	g.drawImage(Life,border_right+85,border_top+120,15,15,this);
-			case 5	:	g.drawImage(Life,border_right+105,border_top+120,15,15,this);
-			case 4	:	g.drawImage(Life,border_right+125,border_top+120,15,15,this);
-			case 3	:	g.drawImage(Life,border_right+145,border_top+120,15,15,this);
-			case 2	:	g.drawImage(Life,border_right+165,border_top+120,15,15,this);
-			case 1	:	g.drawImage(Life,border_right+185,border_top+120,15,15,this);
+		switch (comp_life) {
+		case 10:
+			g.drawImage(Life, border_right + 5, border_top + 120, 15, 15, this);
+		case 9:
+			g.drawImage(Life, border_right + 25, border_top + 120, 15, 15, this);
+		case 8:
+			g.drawImage(Life, border_right + 45, border_top + 120, 15, 15, this);
+		case 7:
+			g.drawImage(Life, border_right + 65, border_top + 120, 15, 15, this);
+		case 6:
+			g.drawImage(Life, border_right + 85, border_top + 120, 15, 15, this);
+		case 5:
+			g.drawImage(Life, border_right + 105, border_top + 120, 15, 15,
+					this);
+		case 4:
+			g.drawImage(Life, border_right + 125, border_top + 120, 15, 15,
+					this);
+		case 3:
+			g.drawImage(Life, border_right + 145, border_top + 120, 15, 15,
+					this);
+		case 2:
+			g.drawImage(Life, border_right + 165, border_top + 120, 15, 15,
+					this);
+		case 1:
+			g.drawImage(Life, border_right + 185, border_top + 120, 15, 15,
+					this);
 		}
-		switch(right_life)
-		{
-			case 10	:	g.drawImage(Life,border_right+5,border_top+160,15,15,this);
-			case 9	:	g.drawImage(Life,border_right+25,border_top+160,15,15,this);
-			case 8	:	g.drawImage(Life,border_right+45,border_top+160,15,15,this);
-			case 7	:	g.drawImage(Life,border_right+65,border_top+160,15,15,this);
-			case 6	:	g.drawImage(Life,border_right+85,border_top+160,15,15,this);
-			case 5	:	g.drawImage(Life,border_right+105,border_top+160,15,15,this);
-			case 4	:	g.drawImage(Life,border_right+125,border_top+160,15,15,this);
-			case 3	:	g.drawImage(Life,border_right+145,border_top+160,15,15,this);
-			case 2	:	g.drawImage(Life,border_right+165,border_top+160,15,15,this);
-			case 1	:	g.drawImage(Life,border_right+185,border_top+160,15,15,this);
+		switch (right_life) {
+		case 10:
+			g.drawImage(Life, border_right + 5, border_top + 160, 15, 15, this);
+		case 9:
+			g.drawImage(Life, border_right + 25, border_top + 160, 15, 15, this);
+		case 8:
+			g.drawImage(Life, border_right + 45, border_top + 160, 15, 15, this);
+		case 7:
+			g.drawImage(Life, border_right + 65, border_top + 160, 15, 15, this);
+		case 6:
+			g.drawImage(Life, border_right + 85, border_top + 160, 15, 15, this);
+		case 5:
+			g.drawImage(Life, border_right + 105, border_top + 160, 15, 15,
+					this);
+		case 4:
+			g.drawImage(Life, border_right + 125, border_top + 160, 15, 15,
+					this);
+		case 3:
+			g.drawImage(Life, border_right + 145, border_top + 160, 15, 15,
+					this);
+		case 2:
+			g.drawImage(Life, border_right + 165, border_top + 160, 15, 15,
+					this);
+		case 1:
+			g.drawImage(Life, border_right + 185, border_top + 160, 15, 15,
+					this);
 		}
 	}
 
@@ -213,22 +271,22 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 		second.fillRect(0, 0, getWidth(), getHeight());
 		second.setColor(getForeground());
 
-		if (started)
-		{
+		if (started) {
 			paint(second);
-			Image arr[]={Paddle};
-			//System.out.println("FfefwefPPPP" + level);
-			switch(level)
-			{
-				case 0	:	new Level0().display(second,arr);
-						break;
-				case 1	:	new Level1().display(second,arr);
-						break;
-				case 2	:	new Level2().display(second,arr);
-						break;
+			Image arr[] = { Paddle };
+			// System.out.println("FfefwefPPPP" + level);
+			switch (level) {
+			case 0:
+				new Level0().display(second, arr);
+				break;
+			case 1:
+				new Level1().display(second, arr);
+				break;
+			case 2:
+				new Level2().display(second, arr);
+				break;
 			}
-		}
-		else if (to_start && create_not_join && level_select)
+		} else if (to_start && create_not_join && level_select)
 			new ChooseLevel(Paddle).paint(second);
 		else if (to_start && create_not_join)
 			new OpeningScreen(Paddle, ip_text, player2, player3, player4)
@@ -258,11 +316,11 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 				paddle_size = paddle.getSize();
 
 				// setOnPaddle() calls
-//				if (ball[b].getSpeedX() == 0 && ball[b].getSpeedY() == 0
-//						&& y + radius + paddle.height >= border_bottom)
-//					ball[b].setOnPaddle(true);
-//				else
-//					ball[b].setOnPaddle(false);
+				// if (ball[b].getSpeedX() == 0 && ball[b].getSpeedY() == 0
+				// && y + radius + paddle.height >= border_bottom)
+				// ball[b].setOnPaddle(true);
+				// else
+				// ball[b].setOnPaddle(false);
 
 				// paddle reflections
 				if (y + paddle.height + radius >= border_bottom
@@ -384,271 +442,282 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 				ball[b].update();
 				// System.out.println(b + " " + ball[b].getX() + " " +
 				// ball[b].getY());
-				switch(level)
-				{
-					case 0	:	new Level0().reflect(ball[b]);
-							break;
-					case 1	:	new Level1().reflect(ball[b]);
-							break;
-					case 2	:	new Level2().reflect(ball[b]);
-							break;
+				switch (level) {
+				case 0:
+					new Level0().reflect(ball[b]);
+					break;
+				case 1:
+					new Level1().reflect(ball[b]);
+					break;
+				case 2:
+					new Level2().reflect(ball[b]);
+					break;
 				}
 
-//				System.out.println("FWEFF+_+_+" + ball[b].isOnPaddle()+"   "+ball[b].getSpeedX()+"  "+ball[b].getSpeedY()+" "+(ball[b].getSpeedX()==0));
-				if (ball[b].isOnPaddle())
-				{
-//					ball[b].setOnPaddle(false);
-					switch(playerNum)
-					{
-						case 1 :	ball[b].setX(paddle.getPos() + (2 * paddle.height * (2 * b - n_balls))/ (5 * n_balls));
-									ball[b].setY(border_bottom-paddle.height-ball[b].getSize());
-								break;
-								
-						case 2 :	ball[b].setY(border_bottom-(right_paddle.getPos() + (2 * right_paddle.height * (2 * b - n_balls))/ (5 * n_balls)));
-									ball[b].setX(border_right-right_paddle.height-ball[b].getSize());
-								break;
-									
-						case 3 :	ball[b].setX(border_right-(comp_paddle.getPos() + (2 * comp_paddle.height * (2 * b - n_balls))/ (5 * n_balls)));
-									ball[b].setY(comp_paddle.height+ball[b].getSize());
-								break;
-									
-						case 4 : 	ball[b].setY(left_paddle.getPos() + (2 * left_paddle.height * (2 * b - n_balls))/ (5 * n_balls));
-									ball[b].setX(left_paddle.height+ball[b].getSize());
-									break;		
+				// System.out.println("FWEFF+_+_+" +
+				// ball[b].isOnPaddle()+"   "+ball[b].getSpeedX()+"  "+ball[b].getSpeedY()+" "+(ball[b].getSpeedX()==0));
+				if (ball[b].isOnPaddle()) {
+					// ball[b].setOnPaddle(false);
+					switch (playerNum) {
+					case 1:
+						ball[b].setX(paddle.getPos()
+								+ (2 * paddle.height * (2 * b - n_balls))
+								/ (5 * n_balls));
+						ball[b].setY(border_bottom - paddle.height
+								- ball[b].getSize());
+						break;
+
+					case 2:
+						ball[b].setY(border_bottom
+								- (right_paddle.getPos() + (2 * right_paddle.height * (2 * b - n_balls))
+										/ (5 * n_balls)));
+						ball[b].setX(border_right - right_paddle.height
+								- ball[b].getSize());
+						break;
+
+					case 3:
+						ball[b].setX(border_right
+								- (comp_paddle.getPos() + (2 * comp_paddle.height * (2 * b - n_balls))
+										/ (5 * n_balls)));
+						ball[b].setY(comp_paddle.height + ball[b].getSize());
+						break;
+
+					case 4:
+						ball[b].setY(left_paddle.getPos()
+								+ (2 * left_paddle.height * (2 * b - n_balls))
+								/ (5 * n_balls));
+						ball[b].setX(left_paddle.height + ball[b].getSize());
+						break;
 					}
-//					System.out.println("FEWFWEFWEf___ "+playerNum+"   "+ball[b].getX()+"  "+ball[b].getY());
+					// System.out.println("FEWFWEFWEf___ "+playerNum+"   "+ball[b].getX()+"  "+ball[b].getY());
 				}
-//				System.out.println("GEGEGEGER+++++");
+				// System.out.println("GEGEGEGER+++++");
 			}
-//<<<<<<< HEAD
-//=======
-			
-//<<<<<<< HEAD
-			
+			// <<<<<<< HEAD
+			// =======
 
-			
-				
-		
-				
-				
-			//comp_paddle.setPos(10);
-//			if (ball[0].getX() != border_right - comp_paddle.getPos())
-//				comp_paddle
-//						.setPos((int) (border_right - ball[0].getX() + (ball[0]
-//								.getX() - border_right - comp_paddle.getPos() >= 0 ? 10
-//								: -10)));
-				
-//			if (ball[0].getY() != border_bottom - comp_paddle.getPos())
-//				left_paddle
-//						.setPos((int) (ball[0].getY() + (ball[0].getY()
-//								- border_right - left_paddle.getPos() >= 0 ? 10
-//								: -10)));
-				
-				
-//			if (ball[0].getY() != border_bottom - comp_paddle.getPos())
-//				right_paddle
-//						.setPos((int) (border_bottom - ball[0].getY() - (ball[0]
-//								.getY() - border_right - right_paddle.getPos() >= 0 ? 10
-//								: -10)));
-				
-				
-//=======
-//>>>>>>> 03b9831ff851f6d9e43eb4799eb5981451c76b8d
-			Ball bal=ball[0];
-			float ballSpeedX = bal.getSpeedX(),ballSpeedY = bal.getSpeedY();
-			if(!player3)
-			{
+			// <<<<<<< HEAD
+
+			// comp_paddle.setPos(10);
+			// if (ball[0].getX() != border_right - comp_paddle.getPos())
+			// comp_paddle
+			// .setPos((int) (border_right - ball[0].getX() + (ball[0]
+			// .getX() - border_right - comp_paddle.getPos() >= 0 ? 10
+			// : -10)));
+
+			// if (ball[0].getY() != border_bottom - comp_paddle.getPos())
+			// left_paddle
+			// .setPos((int) (ball[0].getY() + (ball[0].getY()
+			// - border_right - left_paddle.getPos() >= 0 ? 10
+			// : -10)));
+
+			// if (ball[0].getY() != border_bottom - comp_paddle.getPos())
+			// right_paddle
+			// .setPos((int) (border_bottom - ball[0].getY() - (ball[0]
+			// .getY() - border_right - right_paddle.getPos() >= 0 ? 10
+			// : -10)));
+
+			// =======
+			// >>>>>>> 03b9831ff851f6d9e43eb4799eb5981451c76b8d
+			Ball bal = ball[0];
+			float ballSpeedX = bal.getSpeedX(), ballSpeedY = bal.getSpeedY();
+			if (!player3) {
 				// AI logic for COMP_PADDLE
-				
-				
 
-			//Steps:
-				//step 1: If the ball is moving away stop paddle
-				if (ballSpeedY >= 0){
-					//comp_paddle.setPos(comp_paddle.getPos());
+				// Steps:
+				// step 1: If the ball is moving away stop paddle
+				if (ballSpeedY >= 0) {
+					// comp_paddle.setPos(comp_paddle.getPos());
 					comp_paddle.setSpeed(0);
 				}
-				//step 2: calculate ball's final position on the paddle wall if its approaching
-				else{
-					//number of steps to reach top y
+				// step 2: calculate ball's final position on the paddle wall if
+				// its approaching
+				else {
+					// number of steps to reach top y
 					float predictX;
 					int numSteps = 0;
 					float tmpY = bal.getY();
-					while(tmpY>0){
-						tmpY += ballSpeedY; numSteps++; 
+					while (tmpY > 0) {
+						tmpY += ballSpeedY;
+						numSteps++;
 					}
-					//predict X in infinite plane
-					predictX = (numSteps* ballSpeedX);   // distance ball travels relative to original position
-					if(predictX < 0) { 
+					// predict X in infinite plane
+					predictX = (numSteps * ballSpeedX); // distance ball travels
+														// relative to original
+														// position
+					if (predictX < 0) {
 						predictX = -predictX;
-						predictX = (predictX % 960); 
-						if(predictX > bal.getX()){
+						predictX = (predictX % 960);
+						if (predictX > bal.getX()) {
 							predictX = predictX - bal.getX();
-							if(predictX > 480){
+							if (predictX > 480) {
 								predictX = 480 - (predictX - 480);
 							}
-						}
-						else{
+						} else {
 							predictX = bal.getX() - predictX;
 						}
-					}else{				//dist travelled > 0 
-						predictX = predictX%960;
-						if(predictX > (480 - bal.getX())){
+					} else { // dist travelled > 0
+						predictX = predictX % 960;
+						if (predictX > (480 - bal.getX())) {
 							predictX = (predictX - (480 - bal.getX()));
-							if(predictX>480){
-								predictX = predictX-480;
-							}else{ predictX = 480 - predictX;}
-						}else{
+							if (predictX > 480) {
+								predictX = predictX - 480;
+							} else {
+								predictX = 480 - predictX;
+							}
+						} else {
 							predictX = 480 - predictX;
 						}
 					}
-					//comp_paddle.setSpeed(((480-(int)(predictX))/numSteps));
-					float finalPos = 480-(int)(predictX);
-					if(comp_paddle.getPos() > finalPos){
-						comp_paddle.setPos(comp_paddle.getPos()-1);
-					}else{
-						comp_paddle.setPos(comp_paddle.getPos()+1);
+					// comp_paddle.setSpeed(((480-(int)(predictX))/numSteps));
+					float finalPos = 480 - (int) (predictX);
+					if (comp_paddle.getPos() > finalPos) {
+						comp_paddle.setPos(comp_paddle.getPos() - 1);
+					} else {
+						comp_paddle.setPos(comp_paddle.getPos() + 1);
 					}
-					
+
 				}
-				//comp_paddle.setPos(comp_paddle.getPos()+comp_paddle.getSpeed());
+				// comp_paddle.setPos(comp_paddle.getPos()+comp_paddle.getSpeed());
 
 				// if (ball[0].getX() != border_right - comp_paddle.getPos())
-				// 	comp_paddle
-				// 			.setPos((int) (border_right - ball[0].getX() + (ball[0]
-				// 					.getX() - border_right - comp_paddle.getPos() >= 0 ? 10
-				// 					: -10)));
-			}
-			else if(started && allJoined)
-			{
+				// comp_paddle
+				// .setPos((int) (border_right - ball[0].getX() + (ball[0]
+				// .getX() - border_right - comp_paddle.getPos() >= 0 ? 10
+				// : -10)));
+			} else if (started && allJoined) {
 				comp_paddle.setPos(PlayGame.getPos(3));
 			}
-			if(!player2)
-			{
-				//AI for LEFT PADDLE
-				//step 1: If the ball is moving away stop paddle
-				if (ballSpeedX >= 0){
-					//comp_paddle.setPos(comp_paddle.getPos());
+			if (!player2) {
+				// AI for LEFT PADDLE
+				// step 1: If the ball is moving away stop paddle
+				if (ballSpeedX >= 0) {
+					// comp_paddle.setPos(comp_paddle.getPos());
 					left_paddle.setSpeed(0);
 				}
-				//step 2: calculate ball's final position on the paddle wall if its approaching
-				else{
-					//number of steps to reach top y
-					float predictY=0;
+				// step 2: calculate ball's final position on the paddle wall if
+				// its approaching
+				else {
+					// number of steps to reach top y
+					float predictY = 0;
 					int numSteps = 0;
 					float tmpX = bal.getX();
-					while(tmpX>0){
-						tmpX += ballSpeedX; numSteps++; 
+					while (tmpX > 0) {
+						tmpX += ballSpeedX;
+						numSteps++;
 					}
-					//predict Y in infinite plane
-					predictY = (numSteps* ballSpeedY);   // distance ball travels relative to original position
-					if(predictY < 0) { 
+					// predict Y in infinite plane
+					predictY = (numSteps * ballSpeedY); // distance ball travels
+														// relative to original
+														// position
+					if (predictY < 0) {
 						predictY = -predictY;
-						predictY = (predictY % 960); 
-						if(predictY > bal.getY()){
+						predictY = (predictY % 960);
+						if (predictY > bal.getY()) {
 							predictY = predictY - bal.getY();
-							if(predictY > 480) {
+							if (predictY > 480) {
 								predictY = 480 - (predictY - 480);
 							}
-						}
-						else{
+						} else {
 							predictY = bal.getY() - predictY;
 						}
-					}else{				//dist travelled > 0 
-						predictY = predictY%960;
-						if(predictY > (480 - bal.getY())){
+					} else { // dist travelled > 0
+						predictY = predictY % 960;
+						if (predictY > (480 - bal.getY())) {
 							predictY = (predictY - (480 - bal.getY()));
-							if(predictY>480){
-								predictY = predictY-480;
-							}else{ predictY = 480 - predictY;}
-						}else{
+							if (predictY > 480) {
+								predictY = predictY - 480;
+							} else {
+								predictY = 480 - predictY;
+							}
+						} else {
 							predictY = 480 - predictY;
 						}
 					}
-					//comp_paddle.setSpeed(((480-(int)(predictX))/numSteps));
-					float finalPos = (int)(predictY);
-					if(left_paddle.getPos() > finalPos){
-						left_paddle.setPos(left_paddle.getPos()-1);
-					}else{
-						left_paddle.setPos(left_paddle.getPos()+1);
+					// comp_paddle.setSpeed(((480-(int)(predictX))/numSteps));
+					float finalPos = (int) (predictY);
+					if (left_paddle.getPos() > finalPos) {
+						left_paddle.setPos(left_paddle.getPos() - 1);
+					} else {
+						left_paddle.setPos(left_paddle.getPos() + 1);
 					}
-					
+
 				}
 
 				// if (ball[0].getY() != border_bottom - comp_paddle.getPos())
-				// 	left_paddle
-				// 			.setPos((int) (ball[0].getY() + (ball[0].getY()
-				// 					- border_right - left_paddle.getPos() >= 0 ? 10
-				// 					: -10)));
-			}
-			else if(started && allJoined)
-			{
+				// left_paddle
+				// .setPos((int) (ball[0].getY() + (ball[0].getY()
+				// - border_right - left_paddle.getPos() >= 0 ? 10
+				// : -10)));
+			} else if (started && allJoined) {
 				left_paddle.setPos(PlayGame.getPos(2));
 			}
-			if(!player4)
-			{
-				//AI for RIGhT PADDLE
-				//step 1: If the ball is moving away stop paddle
-				if (ballSpeedX <= 0){
-					//comp_paddle.setPos(comp_paddle.getPos());
+			if (!player4) {
+				// AI for RIGhT PADDLE
+				// step 1: If the ball is moving away stop paddle
+				if (ballSpeedX <= 0) {
+					// comp_paddle.setPos(comp_paddle.getPos());
 					right_paddle.setSpeed(0);
 				}
-				//step 2: calculate ball's final position on the paddle wall if its approaching
-				else{
-					//number of steps to reach top y
-					float predictY=0;
+				// step 2: calculate ball's final position on the paddle wall if
+				// its approaching
+				else {
+					// number of steps to reach top y
+					float predictY = 0;
 					int numSteps = 0;
 					float tmpX = bal.getX();
-					while(tmpX<480){
-						tmpX += ballSpeedX; numSteps++; 
+					while (tmpX < 480) {
+						tmpX += ballSpeedX;
+						numSteps++;
 					}
-					//predict X in infinite plane
-					predictY = (numSteps* ballSpeedY);   // distance ball travels relative to original position
-					if(predictY < 0) { 
+					// predict X in infinite plane
+					predictY = (numSteps * ballSpeedY); // distance ball travels
+														// relative to original
+														// position
+					if (predictY < 0) {
 						predictY = -predictY;
-						predictY = (predictY % 960); 
-						if(predictY > bal.getY()){
+						predictY = (predictY % 960);
+						if (predictY > bal.getY()) {
 							predictY = predictY - bal.getY();
-							if(predictY > 480){
+							if (predictY > 480) {
 								predictY = 480 - (predictY - 480);
 							}
-						}
-						else{
+						} else {
 							predictY = bal.getY() - predictY;
 						}
-					}else{				//dist travelled > 0 
-						predictY = predictY%960;
-						if(predictY > (480 - bal.getY())){
+					} else { // dist travelled > 0
+						predictY = predictY % 960;
+						if (predictY > (480 - bal.getY())) {
 							predictY = (predictY - (480 - bal.getY()));
-							if(predictY>480){
-								predictY = predictY-480;
-							}else{ predictY = 480 - predictY;}
-						}else{
+							if (predictY > 480) {
+								predictY = predictY - 480;
+							} else {
+								predictY = 480 - predictY;
+							}
+						} else {
 							predictY = 480 - predictY;
 						}
 					}
-					//comp_paddle.setSpeed(((480-(int)(predictX))/numSteps));
-					float finalPos = 480 - (int)(predictY);
-					if(right_paddle.getPos() > finalPos){
-						right_paddle.setPos(right_paddle.getPos()-1);
-					}else{
-						right_paddle.setPos(right_paddle.getPos()+1);
+					// comp_paddle.setSpeed(((480-(int)(predictX))/numSteps));
+					float finalPos = 480 - (int) (predictY);
+					if (right_paddle.getPos() > finalPos) {
+						right_paddle.setPos(right_paddle.getPos() - 1);
+					} else {
+						right_paddle.setPos(right_paddle.getPos() + 1);
 					}
-					
+
 				}
 
 				// if (ball[0].getY() != border_bottom - comp_paddle.getPos())
-				// 	right_paddle
-				// 			.setPos((int) (border_bottom - ball[0].getY() - (ball[0]
-				// 					.getY() - border_right - right_paddle.getPos() >= 0 ? 10
-				// 					: -10)));
-			}
-			else if(started && allJoined)
-			{
+				// right_paddle
+				// .setPos((int) (border_bottom - ball[0].getY() - (ball[0]
+				// .getY() - border_right - right_paddle.getPos() >= 0 ? 10
+				// : -10)));
+			} else if (started && allJoined) {
 				right_paddle.setPos(PlayGame.getPos(4));
 			}
-			
-//>>>>>>> 78941520b3ea2854daae094c14a4649325f3cf34
+
+			// >>>>>>> 78941520b3ea2854daae094c14a4649325f3cf34
 			t2 = System.currentTimeMillis();
 			t3 += t2 - t1;
 			if (t3 <= anim_time) {
@@ -671,91 +740,107 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		if (to_start && !level_select && !started && arg0.getX() > 80 && arg0.getX() < 340
-				&& arg0.getY() > 100 && arg0.getY() < 130) {
+		if (to_start && !level_select && !started && arg0.getX() > 80
+				&& arg0.getX() < 340 && arg0.getY() > 100 && arg0.getY() < 130) {
 			clicked_ip_box = true;
 			ip_text = "";
-		} else if (to_start && create_not_join && !level_select && !started && arg0.getX() > 80
-				&& arg0.getX() < 400 && arg0.getY() > 140 && arg0.getY() < 170) {
+		} else if (to_start && create_not_join && !level_select && !started
+				&& arg0.getX() > 80 && arg0.getX() < 400 && arg0.getY() > 140
+				&& arg0.getY() < 170) {
 			player2 = !player2;
-		} else if (to_start && create_not_join && !level_select && !started && arg0.getX() > 80
-				&& arg0.getX() < 400 && arg0.getY() > 180 && arg0.getY() < 210) {
+		} else if (to_start && create_not_join && !level_select && !started
+				&& arg0.getX() > 80 && arg0.getX() < 400 && arg0.getY() > 180
+				&& arg0.getY() < 210) {
 			player3 = !player3;
-		} else if (to_start && create_not_join && !level_select && !started && arg0.getX() > 80
-				&& arg0.getX() < 400 && arg0.getY() > 220 && arg0.getY() < 250) {
+		} else if (to_start && create_not_join && !level_select && !started
+				&& arg0.getX() > 80 && arg0.getX() < 400 && arg0.getY() > 220
+				&& arg0.getY() < 250) {
 			player4 = !player4;
-		} else if (to_start && create_not_join && level_select
+		} else if (to_start
+				&& create_not_join
+				&& level_select
 				&& !started
 				&& (arg0.getX() > 100 && arg0.getX() < 340 && arg0.getY() > 60 && arg0
 						.getY() < 90)) {
 			level = 0;
-			System.out.println("FWEEFWEFWWEWEFWFWEFWE  "+level);
+			System.out.println("FWEEFWEFWWEWEFWFWEFWE  " + level);
 			started = true;
 			clicked_ip_box = false;
 			System.out.println("Starting game3");
-			if(create_not_join) {
-				StartGame sg = new StartGame(UserType.START, "ServerPlayer", "", 0, this);
+			if (create_not_join) {
+				StartGame sg = new StartGame(UserType.START, "ServerPlayer",
+						"", 0, this);
+			} else {
+				StartGame sg = new StartGame(UserType.JOIN, "JoiningPlayer",
+						ip_text, 1, this);
 			}
-			else {
-				StartGame sg = new StartGame(UserType.JOIN, "JoiningPlayer", ip_text, 1, this);
-			}
-			allJoined=true;
+			allJoined = true;
 			PlayGame.startGettingData(this);
 
-		} else if (to_start && create_not_join && level_select
+		} else if (to_start
+				&& create_not_join
+				&& level_select
 				&& !started
 				&& (arg0.getX() > 100 && arg0.getX() < 340 && arg0.getY() > 100 && arg0
 						.getY() < 130)) {
-			System.out.println("FWEEFWEFWWEWEFWFWEFWE  "+level);
+			System.out.println("FWEEFWEFWWEWEFWFWEFWE  " + level);
 			level = 1;
 			started = true;
 			clicked_ip_box = false;
 			System.out.println("Starting game2");
-			if(create_not_join) {
-				StartGame sg = new StartGame(UserType.START, "ServerPlayer", "", 0, this);
+			if (create_not_join) {
+				StartGame sg = new StartGame(UserType.START, "ServerPlayer",
+						"", 0, this);
+			} else {
+				StartGame sg = new StartGame(UserType.JOIN, "JoiningPlayer",
+						ip_text, 1, this);
 			}
-			else {
-				StartGame sg = new StartGame(UserType.JOIN, "JoiningPlayer", ip_text, 1, this);
-			}
-			allJoined=true;
+			allJoined = true;
 			PlayGame.startGettingData(this);
-		} else if (to_start && create_not_join && level_select
+		} else if (to_start
+				&& create_not_join
+				&& level_select
 				&& !started
 				&& (arg0.getX() > 100 && arg0.getX() < 340 && arg0.getY() > 140 && arg0
 						.getY() < 170)) {
-			System.out.println("FWEEFWEFWWEWEFWFWEFWE  "+level);
+			System.out.println("FWEEFWEFWWEWEFWFWEFWE  " + level);
 			level = 2;
 			started = true;
 			clicked_ip_box = false;
 			System.out.println("Starting game1");
-			if(create_not_join) {
-				StartGame sg = new StartGame(UserType.START, "ServerPlayer", "", 0, this);
+			if (create_not_join) {
+				StartGame sg = new StartGame(UserType.START, "ServerPlayer",
+						"", 0, this);
+			} else {
+				StartGame sg = new StartGame(UserType.JOIN, "JoiningPlayer",
+						ip_text, 1, this);
 			}
-			else {
-				StartGame sg = new StartGame(UserType.JOIN, "JoiningPlayer", ip_text, 1, this);
-			}
-			allJoined=true;
+			allJoined = true;
 			PlayGame.startGettingData(this);
-		} else if (to_start && create_not_join && !level_select
+		} else if (to_start
+				&& create_not_join
+				&& !level_select
 				&& !started
 				&& !(arg0.getX() > 80 && arg0.getX() < 400 && arg0.getY() > 80 && arg0
 						.getY() < 280)) {
 			level_select = true;
 			clicked_ip_box = false;
-		} else if (to_start && !create_not_join
+		} else if (to_start
+				&& !create_not_join
 				&& !started
 				&& !(arg0.getX() > 80 && arg0.getX() < 400 && arg0.getY() > 80 && arg0
 						.getY() < 280)) {
 			started = true;
 			clicked_ip_box = false;
 			System.out.println("Joingin game");
-			if(create_not_join) {
-				StartGame sg = new StartGame(UserType.START, "ServerPlayer", "", 0, this);
+			if (create_not_join) {
+				StartGame sg = new StartGame(UserType.START, "ServerPlayer",
+						"", 0, this);
+			} else {
+				StartGame sg = new StartGame(UserType.JOIN, "JoiningPlayer",
+						ip_text, 1, this);
 			}
-			else {
-				StartGame sg = new StartGame(UserType.JOIN, "JoiningPlayer", ip_text, 1, this);
-			}
-			allJoined=true;
+			allJoined = true;
 			PlayGame.startGettingData(this);
 		} else if (!to_start
 				&& (arg0.getX() > 100 && arg0.getX() < 340 && arg0.getY() > 100 && arg0
@@ -784,13 +869,11 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		if (started && ball[0].isOnPaddle() && playerNum==1)
-		{
+		if (started && ball[0].isOnPaddle() && playerNum == 1) {
 			System.out.println(System.currentTimeMillis());
 			try {
 				PlayGame.triggerStart();
-			}
-			catch(Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			for (int b = 0; b < n_balls; b++) {
@@ -803,41 +886,44 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 			}
 		}
 	}
-	
+
 	public void hostMousePressed() {
-		if (started && ball[0].isOnPaddle())
-		{
-//			System.out.println(System.currentTimeMillis());
+		if (started && ball[0].isOnPaddle()) {
+			// System.out.println(System.currentTimeMillis());
 			for (int b = 0; b < n_balls; b++) {
 				if (ball[b].isOnPaddle()) {
 					ball[b].setOnPaddle(false);
-					switch(playerNum)
-					{
-						case 1 	: 	ball[b].setSpeedY(-2.5f);
-									ball[b].setSpeedX((ball[b].getX() - paddle.getPos())
-								/ ((float) paddle.getSize()) * 2);
-						
-								break;
-								
-						case 2 	: 	ball[b].setSpeedX(-2.5f);
-								ball[b].setSpeedY(((ball[b].getY() - (border_bottom-right_paddle.getPos()))
-							/ ((float) right_paddle.getSize()) * 2));
-			
+					switch (playerNum) {
+					case 1:
+						ball[b].setSpeedX(2.5f * ((ball[b].getX() - paddle
+								.getPos()) / ((float) paddle.getSize()) * 2));
+						ball[b].setSpeedY(-(float) Math.sqrt(6.25
+								- ball[b].getSpeedX() * ball[b].getSpeedX()));
+						break;
 
-							break;
-									
-						case 3 	: 	ball[b].setSpeedY(2.5f);
-								ball[b].setSpeedX(((ball[b].getX() - (border_right-comp_paddle.getPos()))
-							/ ((float) comp_paddle.getSize()) * 2));
-					
-							break;
-									
-						case 4 	: 	ball[b].setSpeedX(2.5f);
-								ball[b].setSpeedY(((ball[b].getY() - left_paddle.getPos())
-							/ ((float) left_paddle.getSize()) * 2));
-	
+					case 2:
+						ball[b].setSpeedY(((ball[b].getY() - (border_bottom - right_paddle
+								.getPos())) / ((float) right_paddle.getSize()) * 2));
+						ball[b].setSpeedX(-(float) Math.sqrt(6.25
+								- ball[b].getSpeedY() * ball[b].getSpeedY()));
 
-									break;		
+						break;
+
+					case 3:
+						ball[b].setSpeedX(2.5f * ((ball[b].getX() - (border_right - comp_paddle
+								.getPos())) / ((float) comp_paddle.getSize()) * 2));
+						ball[b].setSpeedY((float) Math.sqrt(6.25
+								- ball[b].getSpeedX() * ball[b].getSpeedX()));
+
+						break;
+
+					case 4:
+						ball[b].setSpeedY(2.5f * ((ball[b].getY() - left_paddle
+								.getPos()) / ((float) left_paddle.getSize()) * 2));
+						ball[b].setSpeedX((float) Math.sqrt(6.25
+								- ball[b].getSpeedY() * ball[b].getSpeedY()));
+
+						break;
 					}
 				}
 			}
@@ -852,21 +938,20 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
-//		paddle.setPos(arg0.getX());
-//		for (int b = 0; b < n_balls; b++) {
-//			if (ball[b].isOnPaddle())
-//				ball[b].setX(paddle.getPos()
-//						+ (2 * paddle.getSize() * (2 * b - n_balls))
-//						/ (5 * n_balls));
-//		}
+		// paddle.setPos(arg0.getX());
+		// for (int b = 0; b < n_balls; b++) {
+		// if (ball[b].isOnPaddle())
+		// ball[b].setX(paddle.getPos()
+		// + (2 * paddle.getSize() * (2 * b - n_balls))
+		// / (5 * n_balls));
+		// }
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent arg0) {
 		paddle.setPos(arg0.getX());
-		
-		if(allJoined)
-		{
+
+		if (allJoined) {
 			try {
 				PlayGame.sendPos(arg0.getX());
 			} catch (Exception e) {
