@@ -420,10 +420,42 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 //=======
 			
 //<<<<<<< HEAD
-			// AI logic for COMP_PADDLE
-			Ball bal=ball[0];
-			float ballSpeedX = bal.getSpeedX(),ballSpeedY = bal.getSpeedY();
 			
+
+			
+				
+		
+				
+				
+			//comp_paddle.setPos(10);
+//			if (ball[0].getX() != border_right - comp_paddle.getPos())
+//				comp_paddle
+//						.setPos((int) (border_right - ball[0].getX() + (ball[0]
+//								.getX() - border_right - comp_paddle.getPos() >= 0 ? 10
+//								: -10)));
+				
+//			if (ball[0].getY() != border_bottom - comp_paddle.getPos())
+//				left_paddle
+//						.setPos((int) (ball[0].getY() + (ball[0].getY()
+//								- border_right - left_paddle.getPos() >= 0 ? 10
+//								: -10)));
+				
+				
+//			if (ball[0].getY() != border_bottom - comp_paddle.getPos())
+//				right_paddle
+//						.setPos((int) (border_bottom - ball[0].getY() - (ball[0]
+//								.getY() - border_right - right_paddle.getPos() >= 0 ? 10
+//								: -10)));
+				
+				
+//=======
+//>>>>>>> 03b9831ff851f6d9e43eb4799eb5981451c76b8d
+			if(!player3)
+			{
+				// AI logic for COMP_PADDLE
+				Ball bal=ball[0];
+				float ballSpeedX = bal.getSpeedX(),ballSpeedY = bal.getSpeedY();
+				
 
 			//Steps:
 				//step 1: If the ball is moving away stop paddle
@@ -476,7 +508,18 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 				}
 				//comp_paddle.setPos(comp_paddle.getPos()+comp_paddle.getSpeed());
 
-
+				// if (ball[0].getX() != border_right - comp_paddle.getPos())
+				// 	comp_paddle
+				// 			.setPos((int) (border_right - ball[0].getX() + (ball[0]
+				// 					.getX() - border_right - comp_paddle.getPos() >= 0 ? 10
+				// 					: -10)));
+			}
+			else if(started && allJoined)
+			{
+				comp_paddle.setPos(PlayGame.getPos(3));
+			}
+			if(!player2)
+			{
 				//AI for LEFT PADDLE
 				//step 1: If the ball is moving away stop paddle
 				if (ballSpeedX >= 0){
@@ -527,7 +570,18 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 					
 				}
 
-				
+				// if (ball[0].getY() != border_bottom - comp_paddle.getPos())
+				// 	left_paddle
+				// 			.setPos((int) (ball[0].getY() + (ball[0].getY()
+				// 					- border_right - left_paddle.getPos() >= 0 ? 10
+				// 					: -10)));
+			}
+			else if(started && allJoined)
+			{
+				left_paddle.setPos(PlayGame.getPos(2));
+			}
+			if(!player4)
+			{
 				//AI for RIGhT PADDLE
 				//step 1: If the ball is moving away stop paddle
 				if (ballSpeedX <= 0){
@@ -578,63 +632,11 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 					
 				}
 
-				
-				
-				
-			//comp_paddle.setPos(10);
-//			if (ball[0].getX() != border_right - comp_paddle.getPos())
-//				comp_paddle
-//						.setPos((int) (border_right - ball[0].getX() + (ball[0]
-//								.getX() - border_right - comp_paddle.getPos() >= 0 ? 10
-//								: -10)));
-				
-//			if (ball[0].getY() != border_bottom - comp_paddle.getPos())
-//				left_paddle
-//						.setPos((int) (ball[0].getY() + (ball[0].getY()
-//								- border_right - left_paddle.getPos() >= 0 ? 10
-//								: -10)));
-				
-				
-//			if (ball[0].getY() != border_bottom - comp_paddle.getPos())
-//				right_paddle
-//						.setPos((int) (border_bottom - ball[0].getY() - (ball[0]
-//								.getY() - border_right - right_paddle.getPos() >= 0 ? 10
-//								: -10)));
-				
-				
-//=======
-//>>>>>>> 03b9831ff851f6d9e43eb4799eb5981451c76b8d
-			if(!player3)
-			{
-				if (ball[0].getX() != border_right - comp_paddle.getPos())
-					comp_paddle
-							.setPos((int) (border_right - ball[0].getX() + (ball[0]
-									.getX() - border_right - comp_paddle.getPos() >= 0 ? 10
-									: -10)));
-			}
-			else if(started && allJoined)
-			{
-				comp_paddle.setPos(PlayGame.getPos(3));
-			}
-			if(!player2)
-			{
-				if (ball[0].getY() != border_bottom - comp_paddle.getPos())
-					left_paddle
-							.setPos((int) (ball[0].getY() + (ball[0].getY()
-									- border_right - left_paddle.getPos() >= 0 ? 10
-									: -10)));
-			}
-			else if(started && allJoined)
-			{
-				left_paddle.setPos(PlayGame.getPos(2));
-			}
-			if(!player4)
-			{
-				if (ball[0].getY() != border_bottom - comp_paddle.getPos())
-					right_paddle
-							.setPos((int) (border_bottom - ball[0].getY() - (ball[0]
-									.getY() - border_right - right_paddle.getPos() >= 0 ? 10
-									: -10)));
+				// if (ball[0].getY() != border_bottom - comp_paddle.getPos())
+				// 	right_paddle
+				// 			.setPos((int) (border_bottom - ball[0].getY() - (ball[0]
+				// 					.getY() - border_right - right_paddle.getPos() >= 0 ? 10
+				// 					: -10)));
 			}
 			else if(started && allJoined)
 			{
