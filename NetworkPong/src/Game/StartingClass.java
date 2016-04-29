@@ -41,6 +41,8 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 	final int border_top = 0, border_bottom = 480, border_left = 0,
 			border_right = 480;
 	public int playerNum = 1;
+	
+	long t_old;
 
 	@Override
 	public void init() {
@@ -110,6 +112,8 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 
 	@Override
 	public void paint(Graphics g) {
+		System.out.println("EGERGEG#### "+(System.currentTimeMillis()-t_old));
+		t_old=System.currentTimeMillis();
 		for (int i = 0; i < n_balls; i++)
 			g.drawImage(Ball, (int) ball[i].getX() - ball[i].getSize(),
 					(int) ball[i].getY() - ball[i].getSize(),
@@ -412,7 +416,7 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 									ball[b].setX(left_paddle.height+ball[b].getSize());
 									break;		
 					}
-					System.out.println("FEWFWEFWEf___ "+playerNum+"   "+ball[b].getX()+"  "+ball[b].getY());
+//					System.out.println("FEWFWEFWEf___ "+playerNum+"   "+ball[b].getX()+"  "+ball[b].getY());
 				}
 //				System.out.println("GEGEGEGER+++++");
 			}
@@ -816,21 +820,21 @@ public class StartingClass extends Applet implements Runnable, MouseListener,
 								break;
 								
 						case 2 	: 	ball[b].setSpeedX(-2.5f);
-								ball[b].setSpeedY(-((ball[b].getX() - paddle.getPos())
-							/ ((float) paddle.getSize()) * 2));
+								ball[b].setSpeedY(((ball[b].getY() - (border_bottom-right_paddle.getPos()))
+							/ ((float) right_paddle.getSize()) * 2));
 			
 
 							break;
 									
 						case 3 	: 	ball[b].setSpeedY(2.5f);
-								ball[b].setSpeedX(-((ball[b].getX() - paddle.getPos())
-							/ ((float) paddle.getSize()) * 2));
+								ball[b].setSpeedX(((ball[b].getX() - (border_right-comp_paddle.getPos()))
+							/ ((float) comp_paddle.getSize()) * 2));
 					
 							break;
 									
 						case 4 	: 	ball[b].setSpeedX(2.5f);
-								ball[b].setSpeedY(((ball[b].getX() - paddle.getPos())
-							/ ((float) paddle.getSize()) * 2));
+								ball[b].setSpeedY(((ball[b].getY() - left_paddle.getPos())
+							/ ((float) left_paddle.getSize()) * 2));
 	
 
 									break;		
