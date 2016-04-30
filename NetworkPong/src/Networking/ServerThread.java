@@ -25,6 +25,23 @@ public class ServerThread extends Thread {
 	        		continue;
 	        	}
 	        	
+	        	if(data.charAt(0) == 'b') {
+	        		int i = 2;
+	        		String posXString = "", posYString = "";
+	        		while(data.charAt(i) != ';') {
+	        			posXString = posXString + data.charAt(i);
+	        			i++;
+	        		}
+	        		i++;
+	        		while(data.charAt(i) != ';') {
+	        			posYString = posYString + data.charAt(i);
+	        			i++;
+	        		}
+	        		PlayGame.setBallPos(Integer.parseInt(posXString),
+	        				Integer.parseInt(posYString));
+	        		continue;
+	        	}
+	        	
 	        	int playerNum = Integer.parseInt("" + data.charAt(0));
 	        	int i = 2;
 	        	String playerPosString = "";

@@ -27,6 +27,7 @@ public class StartGame {
 		System.out.println("Number of players including me: " + (numPlayers));
 		if(type == UserType.START) {
 			try {
+				mGame.broadcastBall = true;
 				playerCount = numPlayers;
 				connectUsers(startGamePort, userName, numPlayers);
 				totalJoined++;
@@ -37,6 +38,7 @@ public class StartGame {
 			}
 		}
 		else {
+			mGame.broadcastBall = false;
 			IP[0] = ip1;
 			PlayGame.IP[0] = ip1;
 			startJoining(ip1, startGamePort, userName);

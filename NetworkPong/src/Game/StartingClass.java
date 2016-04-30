@@ -52,6 +52,7 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 	public int playerNum = 1;
 
 	long t_old;
+	public boolean broadcastBall = false;
 
 	public StartingClass() {
 		paddle_life = init_life;
@@ -128,9 +129,16 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 	}
 
 	public void paint1(Graphics g) {
-		System.out.println("EGERGEG#### "
-				+ (System.currentTimeMillis() - t_old));
-		t_old = System.currentTimeMillis();
+//		System.out.println("EGERGEG#### "
+//				+ (System.currentTimeMillis() - t_old) + "  "+
+//				ball[0].getSpeedX() + "  " + ball[0].getSpeedY() + "  "+
+//				(ball[0].getSpeedX()*ball[0].getSpeedX() + ball[0].getSpeedY()*ball[0].getSpeedY())
+//				+"  " + ball[0].getX() + "   " + ball[0].getY());
+//		t_old = System.currentTimeMillis();
+		if(!broadcastBall) {
+			ball[0].setX(PlayGame.getBallXPos());
+			ball[0].setY(PlayGame.getBallYPos());
+		}
 		for (int i = 0; i < n_balls; i++)
 			g.drawImage(Ball, (int) ball[i].getX() - ball[i].getSize(),
 					(int) ball[i].getY() - ball[i].getSize(),
@@ -724,24 +732,32 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 			} else if (started && allJoined) {
 				right_paddle.setPos(PlayGame.getPos(4));
 			}
+			
+			if(broadcastBall) {
+				try {
+					PlayGame.sendBallPos((int) ball[0].getX(), (int) ball[0].getY());
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				} 
+			}
 
 			// >>>>>>> 78941520b3ea2854daae094c14a4649325f3cf34
 			t2 = System.currentTimeMillis();
 			t3 += t2 - t1;
-			if (t3 <= anim_time) {
-				flag = true;
-				t4 = t3;
-				t3 = 0;
+//			if (t3 <= anim_time) {
+//				flag = true;
+//				t4 = t3;
+//				t3 = 0;
 				try {
-					Thread.sleep(anim_time - t4);
+					Thread.sleep(17);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-			} else {
-				System.out.println("Missed Frame");
-				flag = false;
-				t3 -= anim_time;
-			}
+//			} else {
+//				System.out.println("Missed Frame");
+//				flag = false;
+//				t3 -= anim_time;
+//			}
 		}
 	}
 
@@ -877,7 +893,10 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
+		System.out.println("f the world");
 		if (started && ball[0].isOnPaddle() && playerNum == 1) {
+			System.out.println("f the world again");
+			t_old = System.currentTimeMillis();
 			System.out.println(System.currentTimeMillis());
 			try {
 				PlayGame.triggerStart();
@@ -898,6 +917,7 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 
 	public void hostMousePressed() {
 		if (started && ball[0].isOnPaddle()) {
+			t_old = System.currentTimeMillis();
 			// System.out.println(System.currentTimeMillis());
 			for (int b = 0; b < n_balls; b++) {
 				if (ball[b].isOnPaddle()) {
