@@ -886,9 +886,10 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 			}
 			for (int b = 0; b < n_balls; b++) {
 				if (ball[b].isOnPaddle()) {
-					ball[b].setSpeedY(-2.5f);
-					ball[b].setSpeedX((ball[b].getX() - paddle.getPos())
-							/ ((float) paddle.getSize()) * 2);
+					ball[b].setSpeedX(2.5f * ((ball[b].getX() - paddle
+							.getPos()) / ((float) paddle.getSize()) * 2));
+					ball[b].setSpeedY(-(float) Math.sqrt(6.25
+							- ball[b].getSpeedX() * ball[b].getSpeedX()));
 					ball[b].setOnPaddle(false);
 				}
 			}
