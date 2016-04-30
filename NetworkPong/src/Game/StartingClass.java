@@ -34,6 +34,7 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 												// (donno)
 	private Graphics second;
 	int paddle_life, comp_life, left_life, right_life; // paddle lives for the
+	int paddle_life_rec, comp_life_rec, left_life_rec, right_life_rec; // paddle lives for the
 														// four paddles
 	int anim_time = 5; // anim_time -> time to
 	public boolean level_select, started, clicked_ip_box, player2, player3,
@@ -155,25 +156,32 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 					ball[0].setY(PlayGame.getBallYPos());
 			}	
 		}
+		else
+		{
+			paddle_life_rec=paddle_life;
+			comp_life_rec=comp_life;
+			left_life_rec=left_life;
+			right_life_rec=right_life;
+		}
 		System.out.println("@#@#@#@#@#@#  "+ ball[0].getX()+" "+ball[0].getY());
 		for (int i = 0; i < n_balls; i++)
 			g.drawImage(Ball, (int) ball[i].getX() - ball[i].getSize(),
 					(int) ball[i].getY() - ball[i].getSize(),
 					2 * ball[i].getSize(), 2 * ball[i].getSize(), this);
 
-		if (paddle_life > 0)
+		if (paddle_life_rec > 0)
 			g.drawImage(Paddle, paddle.getPos() - paddle.getSize() / 2,
 					border_bottom - paddle.height, paddle.getSize(),
 					paddle.height, this);
-		if (comp_life > 0)
+		if (comp_life_rec > 0)
 			g.drawImage(Paddle, border_right - comp_paddle.getPos()
 					- comp_paddle.getSize() / 2, border_top,
 					comp_paddle.getSize(), comp_paddle.height, this);
-		if (left_life > 0)
+		if (left_life_rec > 0)
 			g.drawImage(Paddle, border_left,
 					left_paddle.getPos() - left_paddle.getSize() / 2,
 					left_paddle.height, left_paddle.getSize(), this);
-		if (right_life > 0)
+		if (right_life_rec > 0)
 			g.drawImage(
 					Paddle,
 					border_right - right_paddle.height,
@@ -193,7 +201,7 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 		g.setFont(new Font("TimesRoman", Font.BOLD, 20));
 		g.drawString(paddle_life + "\n" + comp_life + "\n" + left_life + "\n"
 				+ right_life, 500, 100);
-		switch (paddle_life) {
+		switch (paddle_life_rec) {
 		case 10:
 			g.drawImage(Life, border_right + 5, border_top + 40, 15, 15, this);
 		case 9:
@@ -215,7 +223,7 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 		case 1:
 			g.drawImage(Life, border_right + 185, border_top + 40, 15, 15, this);
 		}
-		switch (left_life) {
+		switch (left_life_rec) {
 		case 10:
 			g.drawImage(Life, border_right + 5, border_top + 80, 15, 15, this);
 		case 9:
@@ -237,7 +245,7 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 		case 1:
 			g.drawImage(Life, border_right + 185, border_top + 80, 15, 15, this);
 		}
-		switch (comp_life) {
+		switch (comp_life_rec) {
 		case 10:
 			g.drawImage(Life, border_right + 5, border_top + 120, 15, 15, this);
 		case 9:
@@ -264,7 +272,7 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 			g.drawImage(Life, border_right + 185, border_top + 120, 15, 15,
 					this);
 		}
-		switch (right_life) {
+		switch (right_life_rec) {
 		case 10:
 			g.drawImage(Life, border_right + 5, border_top + 160, 15, 15, this);
 		case 9:
@@ -356,7 +364,7 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 				// ball[b].setOnPaddle(false);
 
 				// paddle reflections
-				if (y + paddle.height + radius >= border_bottom
+				if (paddle_life_rec>0 && y + paddle.height + radius >= border_bottom
 						&& (Math.abs(x - paddle_pos) <= paddle_size / 2)) {
 					float sx = ball[b].getSpeedX(), sy = ball[b].getSpeedY();
 					float speed = (float) Math.sqrt(sx * sx + sy * sy);
@@ -371,7 +379,7 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 				comp_paddle_size = comp_paddle.getSize();
 
 				// comp_paddle reflections
-				if (y - comp_paddle.height - radius <= border_top
+				if (comp_life_rec>0 && y - comp_paddle.height - radius <= border_top
 						&& (Math.abs(x - comp_paddle_pos) <= comp_paddle_size / 2)) {
 					float sx = ball[b].getSpeedX(), sy = ball[b].getSpeedY();
 					float speed = (float) Math.sqrt(sx * sx + sy * sy);
@@ -386,7 +394,7 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 				left_paddle_size = left_paddle.getSize();
 
 				// left_paddle reflections
-				if (x - left_paddle.height - radius <= border_left
+				if (left_life_rec>0 && x - left_paddle.height - radius <= border_left
 						&& (Math.abs(y - left_paddle_pos) <= left_paddle_size / 2)) {
 					float sx = ball[b].getSpeedX(), sy = ball[b].getSpeedY();
 					float speed = (float) Math.sqrt(sx * sx + sy * sy);
@@ -404,7 +412,7 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 				right_paddle_size = right_paddle.getSize();
 
 				// left_paddle reflections
-				if (x + right_paddle.height + radius >= border_right
+				if (right_life_rec>0 && x + right_paddle.height + radius >= border_right
 						&& (Math.abs(y - right_paddle_pos) <= right_paddle_size / 2)) {
 					float sx = ball[b].getSpeedX(), sy = ball[b].getSpeedY();
 					float speed = (float) Math.sqrt(sx * sx + sy * sy);
