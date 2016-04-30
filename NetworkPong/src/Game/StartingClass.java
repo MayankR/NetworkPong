@@ -171,10 +171,17 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 		{
 			if(player3)
 				disp_comp = PlayGame.getPos(3);
+			else
+				disp_comp = comp_paddle.getPos();
 			if(player2)
 				disp_left = PlayGame.getPos(2);
+			else
+				disp_left = left_paddle.getPos();
 			if(player4)
 				disp_right = PlayGame.getPos(4);
+			else
+				disp_right = right_paddle.getPos();
+			
 			paddle_life_rec=paddle_life;
 			comp_life_rec=comp_life;
 			left_life_rec=left_life;
@@ -790,8 +797,8 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 						PlayGame.sendPos(comp_paddle.getPos(),3);
 					if(!player4)
 						PlayGame.sendPos(right_paddle.getPos(),4);
-					if(!(paddle_life==paddle_life_old || comp_life == comp_life_old || left_life == left_life_old || right_life == right_life_old))
-					PlayGame.sendLife(paddle_life,comp_life,left_life,right_life);
+					if(!(paddle_life==paddle_life_old && comp_life == comp_life_old && left_life == left_life_old && right_life == right_life_old))
+					PlayGame.sendLife(paddle_life,left_life,comp_life,right_life);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				} 
