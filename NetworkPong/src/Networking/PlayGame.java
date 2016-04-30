@@ -7,7 +7,7 @@ import Game.StartingClass;
 public class PlayGame {
 	public static String[] IP = {"", "", "", ""};
 	public static boolean[] human = {true, false, false, false};
-	public static int myNum = 1;
+	public static int myNum = 1;	//According to server
 	static int playGamePort = 9879;
 	static int[] posArray = {0, 0, 0, 0};
 	static int[] lastPosArray = {0, 0, 0, 0};
@@ -17,10 +17,10 @@ public class PlayGame {
 	static int ballXPos = 0, ballLastXPos = 0, ballSameXCount = 0;
 	static int ballYPos = 0, ballLastYPos = 0, ballSameYCount = 0;
 	
-	public static void sendPos(int pos) throws Exception {
+	public static void sendPos(int pos, int playerNum) throws Exception {
 		DatagramSocket clientSocket = new DatagramSocket();
 		byte[] sendData = new byte[1024];
-		String sentence = myNum + ";" + pos + ";";
+		String sentence = playerNum + ";" + pos + ";";
 		sendData = sentence.getBytes();
 	    
 		for(int i=0;i<4;i++) {
@@ -41,7 +41,7 @@ public class PlayGame {
 		DatagramSocket clientSocket = new DatagramSocket();
 		byte[] sendData = new byte[1024];
 		String sentence = "b;" + posX + ";" + posY + ";";
-		System.out.println("Sending ball pos " + posX + " " + posY);
+		System.out.println("Sending ball pos " + posX + posY);
 		sendData = sentence.getBytes();
 	    
 		for(int i=0;i<4;i++) {

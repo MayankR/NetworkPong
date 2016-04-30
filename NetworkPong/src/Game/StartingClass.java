@@ -36,6 +36,9 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 	int paddle_life, comp_life, left_life, right_life; // paddle lives for the
 	int paddle_life_rec, comp_life_rec, left_life_rec, right_life_rec; // paddle lives for the
 														// four paddles
+	
+	int disp_comp,disp_left,disp_right;
+	
 	int anim_time = 5; // anim_time -> time to
 	public boolean level_select, started, clicked_ip_box, player2, player3,
 			player4, to_start, // started => main game started; clicked_ip_box
@@ -154,7 +157,11 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 				default:
 					ball[0].setX(PlayGame.getBallXPos());
 					ball[0].setY(PlayGame.getBallYPos());
-			}	
+			}
+			paddle_life_rec = PlayGame.getLife(1);
+			comp_life_rec = PlayGame.getLife(3);
+			left_life_rec = PlayGame.getLife(2);
+			right_life_rec = PlayGame.getLife(4);
 		}
 		else
 		{
@@ -163,7 +170,10 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 			left_life_rec=left_life;
 			right_life_rec=right_life;
 		}
-		System.out.println("@#@#@#@#@#@#  "+ ball[0].getX()+" "+ball[0].getY());
+		disp_comp = PlayGame.getPos(3);
+		disp_left = PlayGame.getPos(2);
+		disp_right = PlayGame.getPos(4);
+
 		for (int i = 0; i < n_balls; i++)
 			g.drawImage(Ball, (int) ball[i].getX() - ball[i].getSize(),
 					(int) ball[i].getY() - ball[i].getSize(),
@@ -174,18 +184,18 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 					border_bottom - paddle.height, paddle.getSize(),
 					paddle.height, this);
 		if (comp_life_rec > 0)
-			g.drawImage(Paddle, border_right - comp_paddle.getPos()
+			g.drawImage(Paddle, border_right - disp_comp
 					- comp_paddle.getSize() / 2, border_top,
 					comp_paddle.getSize(), comp_paddle.height, this);
 		if (left_life_rec > 0)
 			g.drawImage(Paddle, border_left,
-					left_paddle.getPos() - left_paddle.getSize() / 2,
+					disp_left - left_paddle.getSize() / 2,
 					left_paddle.height, left_paddle.getSize(), this);
 		if (right_life_rec > 0)
 			g.drawImage(
 					Paddle,
 					border_right - right_paddle.height,
-					border_bottom - right_paddle.getPos()
+					border_bottom - disp_right
 							- right_paddle.getSize() / 2, right_paddle.height,
 					right_paddle.getSize(), this);
 		// barriers
@@ -344,11 +354,16 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 	public void run() {
 		float x, y, radius = ball[0].getSize(), paddle_pos, paddle_size, comp_paddle_pos, comp_paddle_size, right_paddle_pos, right_paddle_size, left_paddle_size, left_paddle_pos;
 		boolean flag = true;
+		int paddle_life_old,comp_life_old,left_life_old,right_life_old;
 		long t1, t2, t3 = 0, t4;
 		while (true) {
 			t1 = System.currentTimeMillis();
 			if (flag)
 				repaint();
+			paddle_life_old = paddle_life;
+			comp_life_old = comp_life;
+			left_life_old = left_life;
+			right_life_old = right_life;
 			for (int b = 0; b < n_balls; b++) {
 				x = ball[b].getX();
 				y = ball[b].getY();
@@ -761,6 +776,14 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 			if(broadcastBall) {
 				try {
 					PlayGame.sendBallPos((int) ball[0].getX(), (int) ball[0].getY());
+					if(!player2)
+						PlayGame.setPos(2, left_paddle.getPos());
+					if(!player3)
+						PlayGame.setPos(3, comp_paddle.getPos());
+					if(!player4)
+						PlayGame.setPos(4, right_paddle.getPos());
+					if(!(paddle_life==paddle_life_old || comp_life == comp_life_old || left_life == left_life_old || right_life == right_life_old))
+					PlayGame.sendLife(paddle_life,comp_life,left_life,right_life);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				} 
@@ -1007,7 +1030,7 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 
 		if (allJoined) {
 			try {
-				PlayGame.sendPos(arg0.getX());
+				PlayGame.sendPos(arg0.getX(), playerNum);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
