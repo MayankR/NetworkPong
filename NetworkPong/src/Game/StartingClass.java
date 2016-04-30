@@ -187,7 +187,26 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 			left_life_rec=left_life;
 			right_life_rec=right_life;
 		}
-
+		if(left_life <= 0 && comp_life<=0 && right_life<=0)
+		{
+			new WinningScreen().paint(g, 1);
+			return;
+		}
+		if(paddle_life <= 0 && comp_life<=0 && right_life<=0)
+		{
+			new WinningScreen().paint(g, 2);
+			return;
+		}
+		if(left_life <= 0 && paddle_life<=0 && right_life<=0)
+		{
+			new WinningScreen().paint(g, 3);
+			return;
+		}
+		if(left_life <= 0 && comp_life<=0 && paddle_life<=0)
+		{
+			new WinningScreen().paint(g, 4);
+			return;
+		}
 		
 		for (int i = 0; i < n_balls; i++)
 			g.drawImage(Ball, (int) ball[i].getX() - ball[i].getSize(),
@@ -247,6 +266,11 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 			g.drawImage(Life, border_right + 165, border_top + 40, 15, 15, this);
 		case 1:
 			g.drawImage(Life, border_right + 185, border_top + 40, 15, 15, this);
+			break;
+		case 0:
+			g.setColor(Color.WHITE);
+			g.setFont(new Font("TimesRoman", Font.BOLD, 15));
+			g.drawString("Player 1 Dead",border_right + 5, border_top+40);
 		}
 		switch (left_life_rec) {
 		case 10:
@@ -269,6 +293,11 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 			g.drawImage(Life, border_right + 165, border_top + 80, 15, 15, this);
 		case 1:
 			g.drawImage(Life, border_right + 185, border_top + 80, 15, 15, this);
+			break;
+		case 0:
+			g.setColor(Color.WHITE);
+			g.setFont(new Font("TimesRoman", Font.BOLD, 15));
+			g.drawString("Player 2 Dead",border_right + 5, border_top+80);
 		}
 		switch (comp_life_rec) {
 		case 10:
@@ -296,6 +325,11 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 		case 1:
 			g.drawImage(Life, border_right + 185, border_top + 120, 15, 15,
 					this);
+			break;
+		case 0:
+			g.setColor(Color.WHITE);
+			g.setFont(new Font("TimesRoman", Font.BOLD, 15));
+			g.drawString("Player 3 Dead",border_right + 5, border_top+120);
 		}
 		switch (right_life_rec) {
 		case 10:
@@ -323,6 +357,11 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 		case 1:
 			g.drawImage(Life, border_right + 185, border_top + 160, 15, 15,
 					this);
+			break;
+		case 0:
+			g.setColor(Color.WHITE);
+			g.setFont(new Font("TimesRoman", Font.BOLD, 15));
+			g.drawString("Player 4 Dead",border_right + 5, border_top+160);
 		}
 	}
 
@@ -790,7 +829,26 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 			
 			if(broadcastBall) {
 				try {
-					PlayGame.sendBallPos((int) ball[0].getX(), (int) ball[0].getY());
+					int bx = 0,by=0;
+					switch(playerNum)
+					{
+						case 2:
+							bx = (int) (border_right-ball[0].getY());
+							by = (int) (ball[0].getX());
+						break;
+						case 3:
+							bx = (int) (border_right-ball[0].getX());
+							by = (int) (border_bottom-ball[0].getY());
+						break;
+						case 4:
+							bx = (int) (ball[0].getY());
+							by = (int) (border_bottom-ball[0].getX());
+						break;
+						case 1:
+							bx = (int) ball[0].getX();
+							by = (int) ball[0].getY();
+					}
+					PlayGame.sendBallPos(bx, by);
 					if(!player2)
 						PlayGame.sendPos(left_paddle.getPos(),2);
 					if(!player3)
