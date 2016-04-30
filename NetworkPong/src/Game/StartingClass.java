@@ -136,8 +136,21 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 //				+"  " + ball[0].getX() + "   " + ball[0].getY());
 //		t_old = System.currentTimeMillis();
 		if(!broadcastBall) {
-			ball[0].setX(PlayGame.getBallXPos());
-			ball[0].setY(PlayGame.getBallYPos());
+			switch(playerNum)
+			{
+				case 2:
+					ball[0].setY(-PlayGame.getBallXPos());
+					ball[0].setX(PlayGame.getBallYPos());
+				break;
+				case 3:
+					ball[0].setX(-PlayGame.getBallXPos());
+					ball[0].setY(-PlayGame.getBallYPos());
+				break;
+				case 4:
+					ball[0].setY(PlayGame.getBallXPos());
+					ball[0].setX(-PlayGame.getBallYPos());
+				break;
+			}	
 		}
 		for (int i = 0; i < n_balls; i++)
 			g.drawImage(Ball, (int) ball[i].getX() - ball[i].getSize(),
