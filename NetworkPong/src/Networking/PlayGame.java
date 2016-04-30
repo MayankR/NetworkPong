@@ -17,6 +17,7 @@ public class PlayGame {
 	static int ballXPos = 0, ballLastXPos = 0, ballSameXCount = 0;
 	static int ballYPos = 0, ballLastYPos = 0, ballSameYCount = 0;
 	static int[] lifeArray = {10, 10, 10, 10};
+	static int ballBroadcaster = 0;
 	
 	public static void sendPos(int pos, int playerNum) throws Exception {
 		String sentence = playerNum + ";" + pos + ";";
@@ -24,7 +25,7 @@ public class PlayGame {
 	}
 	
 	public static void sendBallPos(int posX, int posY) throws Exception {
-		String sentence = "b;" + posX + ";" + posY + ";";
+		String sentence = "b;" + posX + ";" + posY + ";" + myNum + ";";
 		broadcastData(sentence);
 	}
 	
@@ -110,12 +111,21 @@ public class PlayGame {
 		}
 		if(posArray[serverNum - 1] != 0 && sameCount[serverNum - 1] >= 1000) {
 			System.out.println(playerNum + " is declared disconnected!!!");
+			setPlayerAsAI(playerNum);
 		}
 		lastPosArray[serverNum - 1] = posArray[serverNum - 1];
 		return posArray[serverNum - 1];
 	}
 	
+	private static void setPlayerAsAI(int playerNum) {
+		if(playerNum == 2) { StartingClass.player2 = false; }
+		if(playerNum == 3) { StartingClass.player3 = false; }
+		if(playerNum == 4) { StartingClass.player4 = false; }
+		human[playerNum - 1] = false;
+	}
+	
 	public static int getBallXPos() {
+		//Store previous positions of ball
 		if(ballLastXPos == ballXPos) {
 			ballSameXCount++;
 		}
@@ -124,22 +134,47 @@ public class PlayGame {
 		}
 		if(ballXPos != 0 && ballSameXCount >= 1000 && ballYPos != 0 && ballSameYCount >= 1000) {
 			System.out.println("Ball broadcaster is declared disconnected!!!");
+			human[ballBroadcaster - 1] = false;
+			
+			//Check who becomes the next host.
+			int maxIPIndex = myNum - 1, maxIPNum = 0;
+			for(int i=0;i<4;i++) {
+				if(!human[i]) continue;
+				
+				//Convert IP to a number by removing dots.
+				String ipNumString = "";
+				for(int j=4;j<=IP[i].length();j++) {
+					if(IP[i].charAt(j) == '.') continue;
+					ipNumString = ipNumString + IP[i].charAt(j);
+				}
+				if(Integer.parseInt(ipNumString) > maxIPNum) {
+					maxIPNum = Integer.parseInt(ipNumString);
+					maxIPIndex = i;
+				}
+			}
+			
+			//Set myself as host if I have max value of IP.
+			if(maxIPIndex == myNum - 1) {
+				StartingClass.broadcastBall = true;
+			}
 		}
 		ballLastXPos = ballXPos;
+		
+		//Return ball x.
 		return ballXPos;
 	}
 	
 	public static int getBallYPos() {
+		//Store previous positions of ball
 		if(ballLastYPos == ballYPos) {
 			ballSameYCount++;
 		}
 		else {
 			ballSameYCount = 0;
 		}
-//		if(ballYPos != 0 && ballSameYCount >= 1000) {
-//			System.out.println("Ball broadcaster is declared disconnected!!!");
-//		}
 		ballLastYPos = ballYPos;
+		
+		//Return ball y.
 		return ballYPos;
 	}
 	
