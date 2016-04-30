@@ -187,6 +187,12 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 			left_life_rec=left_life;
 			right_life_rec=right_life;
 		}
+		comp_paddle.setPos(disp_comp);
+		left_paddle.setPos(disp_left);
+		right_paddle.setPos(disp_right);
+		disp_comp = comp_paddle.getPos();
+		disp_left = left_paddle.getPos();
+		disp_right = right_paddle.getPos();
 		if(left_life <= 0 && comp_life<=0 && right_life<=0)
 		{
 			new WinningScreen().paint(g, 1);
