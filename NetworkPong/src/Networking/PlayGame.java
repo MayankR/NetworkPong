@@ -37,7 +37,7 @@ public class PlayGame {
 		DatagramSocket clientSocket = new DatagramSocket();
 		byte[] sendData = new byte[1024];
 		String sentence = data;
-		System.out.println("Sending data: " + data);
+//		System.out.println("Sending data: " + data);
 		sendData = sentence.getBytes();
 	    
 		for(int i=0;i<4;i++) {

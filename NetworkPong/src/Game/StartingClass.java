@@ -162,18 +162,26 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 			comp_life_rec = PlayGame.getLife(3);
 			left_life_rec = PlayGame.getLife(2);
 			right_life_rec = PlayGame.getLife(4);
+
+			disp_comp = PlayGame.getPos(3);
+			disp_left = PlayGame.getPos(2);
+			disp_right = PlayGame.getPos(4);
 		}
 		else
 		{
+			if(player3)
+				disp_comp = PlayGame.getPos(3);
+			if(player2)
+				disp_left = PlayGame.getPos(2);
+			if(player4)
+				disp_right = PlayGame.getPos(4);
 			paddle_life_rec=paddle_life;
 			comp_life_rec=comp_life;
 			left_life_rec=left_life;
 			right_life_rec=right_life;
 		}
-		disp_comp = PlayGame.getPos(3);
-		disp_left = PlayGame.getPos(2);
-		disp_right = PlayGame.getPos(4);
 
+		
 		for (int i = 0; i < n_balls; i++)
 			g.drawImage(Ball, (int) ball[i].getX() - ball[i].getSize(),
 					(int) ball[i].getY() - ball[i].getSize(),
@@ -777,11 +785,11 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 				try {
 					PlayGame.sendBallPos((int) ball[0].getX(), (int) ball[0].getY());
 					if(!player2)
-						PlayGame.setPos(2, left_paddle.getPos());
+						PlayGame.sendPos(left_paddle.getPos(),2);
 					if(!player3)
-						PlayGame.setPos(3, comp_paddle.getPos());
+						PlayGame.sendPos(comp_paddle.getPos(),3);
 					if(!player4)
-						PlayGame.setPos(4, right_paddle.getPos());
+						PlayGame.sendPos(right_paddle.getPos(),4);
 					if(!(paddle_life==paddle_life_old || comp_life == comp_life_old || left_life == left_life_old || right_life == right_life_old))
 					PlayGame.sendLife(paddle_life,comp_life,left_life,right_life);
 				} catch (Exception e1) {
