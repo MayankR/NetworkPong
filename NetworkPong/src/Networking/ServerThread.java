@@ -42,6 +42,35 @@ public class ServerThread extends Thread {
 	        		continue;
 	        	}
 	        	
+	        	if(data.charAt(0) == 'l') {
+	        		int i = 2;
+	        		String l1String = "", l2String = "", l3String = "", l4String = "";
+	        		while(data.charAt(i) != ';') {
+	        			l1String = l1String + data.charAt(i);
+	        			i++;
+	        		}
+	        		i++;
+	        		while(data.charAt(i) != ';') {
+	        			l2String = l2String + data.charAt(i);
+	        			i++;
+	        		}
+	        		i++;
+	        		while(data.charAt(i) != ';') {
+	        			l3String = l3String + data.charAt(i);
+	        			i++;
+	        		}
+	        		i++;
+	        		while(data.charAt(i) != ';') {
+	        			l4String = l4String + data.charAt(i);
+	        			i++;
+	        		}
+	        		PlayGame.setLives(Integer.parseInt(l1String),
+	        				Integer.parseInt(l2String),
+	        				Integer.parseInt(l3String),
+	        				Integer.parseInt(l4String));
+	        		continue;
+	        	}
+	        	
 	        	int playerNum = Integer.parseInt("" + data.charAt(0));
 	        	int i = 2;
 	        	String playerPosString = "";

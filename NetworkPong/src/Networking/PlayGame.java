@@ -16,32 +16,28 @@ public class PlayGame {
 	static int dropFrameCount;
 	static int ballXPos = 0, ballLastXPos = 0, ballSameXCount = 0;
 	static int ballYPos = 0, ballLastYPos = 0, ballSameYCount = 0;
+	static int[] lifeArray = {10, 10, 10, 10};
 	
 	public static void sendPos(int pos, int playerNum) throws Exception {
-		DatagramSocket clientSocket = new DatagramSocket();
-		byte[] sendData = new byte[1024];
 		String sentence = playerNum + ";" + pos + ";";
-		sendData = sentence.getBytes();
-	    
-		for(int i=0;i<4;i++) {
-			if(!human[i]) continue;
-			if(i == myNum-1) continue;
-			
-			InetAddress IPAddress = InetAddress.getByName(IP[i]);
-			
-			DatagramPacket sendPacket = 
-					new DatagramPacket(sendData, sendData.length, IPAddress, playGamePort);
-			clientSocket.send(sendPacket);
-		}
-		
-		clientSocket.close();
+		broadcastData(sentence);
 	}
 	
 	public static void sendBallPos(int posX, int posY) throws Exception {
+		String sentence = "b;" + posX + ";" + posY + ";";
+		broadcastData(sentence);
+	}
+	
+	public static void sendLife(int l1, int l2, int l3, int l4) throws Exception {
+		String sentence = "l;" + l1 + ";" + l2 + ";" + l3 + ";" + l4;
+		broadcastData(sentence);
+	}
+	
+	private static void broadcastData(String data) throws Exception {
 		DatagramSocket clientSocket = new DatagramSocket();
 		byte[] sendData = new byte[1024];
-		String sentence = "b;" + posX + ";" + posY + ";";
-		System.out.println("Sending ball pos " + posX + posY);
+		String sentence = data;
+		System.out.println("Sending data: " + data);
 		sendData = sentence.getBytes();
 	    
 		for(int i=0;i<4;i++) {
@@ -88,6 +84,19 @@ public class PlayGame {
 	public static void setBallPos(int ballX, int ballY) {
 		ballXPos = ballX;
 		ballYPos = ballY;
+	}
+	
+	public static void setLives(int l1, int l2, int l3, int l4) {
+		lifeArray[0] = l1;
+		lifeArray[1] = l2;
+		lifeArray[2] = l3;
+		lifeArray[3] = l4;
+	}
+	
+	public static int getLife(int playerNum) {
+		int serverNum = (playerNum + myNum - 1);
+		if(serverNum > 4) serverNum -= 4;
+		return lifeArray[serverNum - 1];
 	}
 	
 	public static int getPos(int playerNum) {
