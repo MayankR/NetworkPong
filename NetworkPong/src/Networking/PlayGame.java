@@ -29,7 +29,7 @@ public class PlayGame {
 	}
 	
 	public static void sendLife(int l1, int l2, int l3, int l4) throws Exception {
-		String sentence = "l;" + l1 + ";" + l2 + ";" + l3 + ";" + l4;
+		String sentence = "l;" + l1 + ";" + l2 + ";" + l3 + ";" + l4 + ";";
 		broadcastData(sentence);
 	}
 	
@@ -37,7 +37,7 @@ public class PlayGame {
 		DatagramSocket clientSocket = new DatagramSocket();
 		byte[] sendData = new byte[1024];
 		String sentence = data;
-//		System.out.println("Sending data: " + data);
+		System.out.println("Sending data: " + data);
 		sendData = sentence.getBytes();
 	    
 		for(int i=0;i<4;i++) {
