@@ -999,7 +999,7 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 
 		if (allJoined) {
 			try {
-				PlayGame.sendPos(arg0.getX());
+				PlayGame.sendPos(arg0.getX(), playerNum);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
