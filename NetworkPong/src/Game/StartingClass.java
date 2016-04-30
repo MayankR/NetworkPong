@@ -40,7 +40,7 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 	int disp_comp,disp_left,disp_right;
 	
 	int anim_time = 5; // anim_time -> time to
-	public boolean level_select, started, clicked_ip_box, player2, player3,
+	public static boolean level_select, started, clicked_ip_box, player2, player3,
 			player4, to_start, // started => main game started; clicked_ip_box
 								// => ipbox clicked; playerx -> human;
 			create_not_join, allJoined; // to_start -> create_not_join -> game
@@ -56,7 +56,7 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 	public int playerNum = 1;
 
 	long t_old;
-	public boolean broadcastBall = false;
+	public static boolean broadcastBall = false;
 
 	public StartingClass() {
 		paddle_life = init_life;

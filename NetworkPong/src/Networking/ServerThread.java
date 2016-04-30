@@ -27,7 +27,7 @@ public class ServerThread extends Thread {
 	        	
 	        	if(data.charAt(0) == 'b') {
 	        		int i = 2;
-	        		String posXString = "", posYString = "";
+	        		String posXString = "", posYString = "", serverNumString = "";
 	        		while(data.charAt(i) != ';') {
 	        			posXString = posXString + data.charAt(i);
 	        			i++;
@@ -37,8 +37,14 @@ public class ServerThread extends Thread {
 	        			posYString = posYString + data.charAt(i);
 	        			i++;
 	        		}
+	        		i++;
+	        		while(data.charAt(i) != ';') {
+	        			serverNumString = serverNumString + data.charAt(i);
+	        			i++;
+	        		}
 	        		PlayGame.setBallPos(Integer.parseInt(posXString),
 	        				Integer.parseInt(posYString));
+	        		PlayGame.ballBroadcaster = Integer.parseInt(serverNumString);
 	        		continue;
 	        	}
 	        	
