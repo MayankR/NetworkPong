@@ -139,19 +139,23 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 			switch(playerNum)
 			{
 				case 2:
-					ball[0].setY(-PlayGame.getBallXPos());
+					ball[0].setY(border_right-PlayGame.getBallXPos());
 					ball[0].setX(PlayGame.getBallYPos());
 				break;
 				case 3:
-					ball[0].setX(-PlayGame.getBallXPos());
-					ball[0].setY(-PlayGame.getBallYPos());
+					ball[0].setX(border_right-PlayGame.getBallXPos());
+					ball[0].setY(border_bottom-PlayGame.getBallYPos());
 				break;
 				case 4:
 					ball[0].setY(PlayGame.getBallXPos());
-					ball[0].setX(-PlayGame.getBallYPos());
+					ball[0].setX(border_bottom-PlayGame.getBallYPos());
 				break;
+				default:
+					ball[0].setX(PlayGame.getBallXPos());
+					ball[0].setY(PlayGame.getBallYPos());
 			}	
 		}
+		System.out.println("@#@#@#@#@#@#  "+ ball[0].getX()+" "+ball[0].getY());
 		for (int i = 0; i < n_balls; i++)
 			g.drawImage(Ball, (int) ball[i].getX() - ball[i].getSize(),
 					(int) ball[i].getY() - ball[i].getSize(),
@@ -757,20 +761,20 @@ public class StartingClass extends JPanel implements Runnable, MouseListener,
 			// >>>>>>> 78941520b3ea2854daae094c14a4649325f3cf34
 			t2 = System.currentTimeMillis();
 			t3 += t2 - t1;
-//			if (t3 <= anim_time) {
-//				flag = true;
-//				t4 = t3;
-//				t3 = 0;
+			if (t3 <= anim_time) {
+				flag = true;
+				t4 = t3;
+				t3 = 0;
 				try {
 					Thread.sleep(17);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-//			} else {
-//				System.out.println("Missed Frame");
-//				flag = false;
-//				t3 -= anim_time;
-//			}
+			} else {
+				System.out.println("Missed Frame");
+				flag = false;
+				t3 -= anim_time;
+			}
 		}
 	}
 
